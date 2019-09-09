@@ -19,7 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/sub_main_nav_header">
+        app:headerLayout="@layout/sub_main_nav_header"
+        app:menu="@menu/sub_navigation_menu">
 
         <RelativeLayout
             android:id="@+id/Layout_1"
