@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SignIn">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/ID_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/ID_Text"
+            android:text="아이디" />
+
+        <TextView
+            android:id="@+id/PW_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ID_textview"
+            android:layout_alignBaseline="@+id/PW_Text"
+            android:layout_alignLeft="@+id/ID_textview"
+            android:text="비밀번호" />
+
+        <TextView
+            android:id="@+id/PW_check_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PW_textview"
+            android:layout_alignBaseline="@+id/PW_check_Text"
+            android:layout_alignLeft="@+id/ID_textview"
+            android:text="비밀번호확인" />
+
+        <TextView
+            android:id="@+id/NICKNAME_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PW_check_textview"
+            android:layout_alignBaseline="@+id/nickname_Text"
+            android:layout_alignLeft="@+id/ID_textview"
+            android:text="이름" />
+
+
+        <EditText
+            android:id="@+id/ID_Text"
+            android:layout_width="213dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_toRightOf="@+id/ID_textview" />
+
+
+        <EditText
+            android:id="@+id/PW_Text"
+            android:layout_width="213dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ID_Text"
+            android:layout_alignLeft="@+id/ID_Text"
+            android:layout_toRightOf="@+id/PW_textview"
+            android:inputType="textPassword" />
+
+
+        <EditText
+            android:id="@+id/PW_check_Text"
+            android:layout_width="213dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PW_Text"
+            android:layout_alignLeft="@+id/ID_Text"
+            android:layout_toRightOf="@+id/PW_textview"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/nickname_Text"
+            android:layout_width="213dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PW_check_Text"
+            android:layout_alignLeft="@+id/ID_Text"
+            android:layout_toRightOf="@+id/NICKNAME_textview" />
+
+
+        <Button
+            android:id="@+id/add_account_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nickname_Text"
+            android:layout_alignBaseline="@+id/add_account_cancel"
+            android:layout_marginLeft="100dp"
+            android:text="회원가입" />
+
+        <Button
+            android:id="@+id/add_account_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nickname_Text"
+            android:layout_toRightOf="@+id/add_account_confirm"
+            android:text="취소" />
+
+        <Button
+            android:id="@+id/ID_confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/ID_Text"
+            android:text="중복확인"
+            android:textSize="8dp" />
+
+        <ImageView
+            android:id="@+id/check_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/PW_check_Text"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/PW_check_Text"
+            android:scaleType="fitStart" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

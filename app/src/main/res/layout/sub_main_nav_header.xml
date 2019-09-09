@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="230dp"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:id="@+id/group_explanation"
+        android:layout_width="96dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="50dp"
+        android:text="그룹입니다."
+        android:textSize="16dp"
+        android:textColor="#fff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+</android.support.constraint.ConstraintLayout>
