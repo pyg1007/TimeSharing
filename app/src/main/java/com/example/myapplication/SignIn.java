@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -149,7 +150,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
             try{
                 String Id = strings[0];
                 String link = "http://pyg941007.dothome.co.kr/id_chk.php";
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
 
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();
@@ -177,11 +178,10 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
         }
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if(s.equals("success")){
+            if(s.equals("failure")){
                 Id_Check = false;
                 Toast.makeText(SignIn.this, "이미 아이디가 존재합니다.", Toast.LENGTH_SHORT).show();
-            }else if(s.equals("failure")){
+            }else if(s.equals("success")){
                 Id_Check = true;
                 Toast.makeText(SignIn.this, "가입 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
             }

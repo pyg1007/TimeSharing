@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
+public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener, View.OnClickListener{
 
     private String tablename;
     private String userid;
@@ -65,6 +66,9 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
 
     private MaterialCalendarView materialCalendarView;
+
+    private Button Exit;
+    private Button Invite;
 
 
     @Override
@@ -105,6 +109,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         view = navigationView.getHeaderView(0);
         new LookupRoomComment().execute();
 
+        Exit = view.findViewById(R.id.exit);
+        Invite = view.findViewById(R.id.Invite_list);
 
         final TextView Group_Explanation = view.findViewById(R.id.group_explanation);
         Group_Explanation.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +141,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         menuInflater.inflate(R.menu.toolbar_deco, menu);
         return true;
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -169,7 +174,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public void addmember(){
         try {
@@ -216,6 +220,18 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         DateTextView.setGravity(Gravity.CENTER);
         DateTextView.setTextSize(20);
         DateTextView.setText(date.getYear() + "년" + (date.getMonth()+1) + "월");
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.Invite_list:
+                new InviteRoom().execute();
+                break;
+            case R.id.exit:
+                new ExitRoom().execute();
+                break;
+        }
     }
 
 
@@ -580,8 +596,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     count++;
                 }
 
-
-                //////이쪽이문제임
                 final TextView Group_Explanation = view.findViewById(R.id.group_explanation);
                 if(tableexplanation == null){
                     Group_Explanation.setText(tablename + "방 입니다.");
@@ -591,6 +605,32 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class InviteRoom extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
+    }
+
+    public class ExitRoom extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
         }
     }
 
