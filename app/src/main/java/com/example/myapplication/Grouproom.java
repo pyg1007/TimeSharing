@@ -52,7 +52,7 @@ public class Grouproom extends AppCompatActivity {
 
                 String link = "http://pyg941007.dothome.co.kr/roomlist.php";
 
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
 
                 URL url = new URL(link);
 

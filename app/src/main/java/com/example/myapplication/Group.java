@@ -241,8 +241,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             try {
 
                 String link = "http://pyg941007.dothome.co.kr/groupadd.php";
-                String data = URLEncoder.encode("Tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
-                data += "&" + URLEncoder.encode("Memberid", "UTF-8") + "=" + URLEncoder.encode(Strings[0], "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                data += "&" + URLEncoder.encode("memberid", "UTF-8") + "=" + URLEncoder.encode(Strings[0], "UTF-8");
 
                 URL url = new URL(link);
 
@@ -293,7 +293,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                 String link = "http://pyg941007.dothome.co.kr/join.php";
 
-                String data = URLEncoder.encode("Tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -422,7 +422,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                 String link = "http://pyg941007.dothome.co.kr/Member_search.php";
 
-                String data = URLEncoder.encode("Tn", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -491,7 +491,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                 String link = "http://pyg941007.dothome.co.kr/UpdateRoomComment.php";
 
-                String data = URLEncoder.encode("Tn", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
                 data += "&" + URLEncoder.encode("tableexplanation", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
                 URL url = new URL(link);
 
@@ -544,7 +544,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                 String link = "http://pyg941007.dothome.co.kr/LookRoomComment.php";
 
-                String data = URLEncoder.encode("Tn", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
                 data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
                 URL url = new URL(link);
 
@@ -611,7 +611,41 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     public class InviteRoom extends AsyncTask<String, Void, String>{
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(String... strings) { // 수정필요함.
+            try{
+                String link = "http://pyg941007.dothome.co.kr/LookRoomComment.php";
+
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -625,6 +659,40 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         @Override
         protected String doInBackground(String... strings) {
+            try{
+                String link = "http://pyg941007.dothome.co.kr/LookRoomComment.php";
+
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

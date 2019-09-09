@@ -96,7 +96,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
             try {
 
                 String link = "http://pyg941007.dothome.co.kr/user_info.php";
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection urlConnection = url.openConnection();
@@ -169,8 +169,8 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
 
                 String link = "http://pyg941007.dothome.co.kr/updateuser.php";
 
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(userid), "UTF-8");
-                data += "&" + URLEncoder.encode("Pw","UTF-8") + "=" + URLEncoder.encode(Pw.getText().toString().trim(),"UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(userid), "UTF-8");
+                data += "&" + URLEncoder.encode("userpassword","UTF-8") + "=" + URLEncoder.encode(Pw.getText().toString().trim(),"UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();

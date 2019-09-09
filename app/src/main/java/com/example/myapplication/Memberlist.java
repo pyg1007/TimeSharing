@@ -269,8 +269,8 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 String link = "http://pyg941007.dothome.co.kr/aa.php";
 
 
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                data += "&" + URLEncoder.encode("Tn", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
 
                 URL url = new URL(link);
 

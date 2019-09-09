@@ -176,12 +176,12 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
 
                 String link = "http://pyg941007.dothome.co.kr/updateschedule.php";
 
-                String data = URLEncoder.encode("_Id", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(_ID), "UTF-8");
-                data += "&" + URLEncoder.encode("Title","UTF-8") + "=" + URLEncoder.encode(Title,"UTF-8");
-                data += "&" + URLEncoder.encode("Contents","UTF-8") + "=" + URLEncoder.encode(Contents,"UTF-8");
-                data += "&" + URLEncoder.encode("Previoustime","UTF-8") + "=" + URLEncoder.encode(Previoustime,"UTF-8");
-                data += "&" + URLEncoder.encode("Aftertime","UTF-8") + "=" + URLEncoder.encode(Aftertime,"UTF-8");
-                data += "&" + URLEncoder.encode("Savedate","UTF-8") + "=" + URLEncoder.encode(Savedate,"UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(_ID), "UTF-8");
+                data += "&" + URLEncoder.encode("title","UTF-8") + "=" + URLEncoder.encode(Title,"UTF-8");
+                data += "&" + URLEncoder.encode("contents","UTF-8") + "=" + URLEncoder.encode(Contents,"UTF-8");
+                data += "&" + URLEncoder.encode("previoustime","UTF-8") + "=" + URLEncoder.encode(Previoustime,"UTF-8");
+                data += "&" + URLEncoder.encode("aftertime","UTF-8") + "=" + URLEncoder.encode(Aftertime,"UTF-8");
+                data += "&" + URLEncoder.encode("savedate","UTF-8") + "=" + URLEncoder.encode(Savedate,"UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();

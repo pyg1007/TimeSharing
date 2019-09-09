@@ -336,7 +336,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
                 String link = "http://pyg941007.dothome.co.kr/load_schedule.php";
 
-                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -456,7 +456,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             try{
                 String link = "http://pyg941007.dothome.co.kr/deleteschedule.php";
 
-                String data = URLEncoder.encode("Title", "UTF-8") + "=" + URLEncoder.encode(Title, "UTF-8");
+                String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(Title, "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -517,8 +517,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         protected Void doInBackground(Void... voids) {
             try{
             String link = "http://pyg941007.dothome.co.kr/Login.php";
-            String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
-            data += "&" + URLEncoder.encode("Pw", "UTF-8") + "=" + URLEncoder.encode(userpassword, "UTF-8");
+            String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+            data += "&" + URLEncoder.encode("userpassword", "UTF-8") + "=" + URLEncoder.encode(userpassword, "UTF-8");
 
             URL url = new URL(link);
             URLConnection conn = url.openConnection();
