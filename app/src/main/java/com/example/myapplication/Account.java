@@ -51,9 +51,9 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         ID.setText("아이디 : " + userid);
         ID.setTextSize(16);
 
-        Name = findViewById(R.id.name);
-        Name.setText(userName);
-        Name.setTextSize(16);
+        //Name = findViewById(R.id.name);
+        //Name.setText(userName);
+        //Name.setTextSize(16);
 
         Pw = findViewById(R.id.pw);
         Pw_chk = findViewById(R.id.pw_chk);
