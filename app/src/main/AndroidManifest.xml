@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Grouproom"></activity>
+        <activity android:name=".CheckboxList"></activity>
+        <activity android:name=".Grouproom" />
         <activity android:name=".Account" />
         <activity android:name=".Group" />
         <activity android:name=".updatememo" />

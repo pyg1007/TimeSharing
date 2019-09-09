@@ -53,6 +53,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private String tablename;
     private String userid;
     private TextView DateTextView;
+    private TextView Group_Explanation;
     private ActionBarDrawerToggle drawerToggle;
     private View view;
 
@@ -111,8 +112,10 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         Exit = view.findViewById(R.id.exit);
         Invite = view.findViewById(R.id.Invite_list);
+  //      Exit.setOnClickListener(Group.this);
+  //      Invite.setOnClickListener(Group.this);
 
-        final TextView Group_Explanation = view.findViewById(R.id.group_explanation);
+        Group_Explanation = view.findViewById(R.id.group_explanation);
         Group_Explanation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -595,9 +598,11 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     tableexplanation = object.getString("tableexplanation");
                     count++;
                 }
+                Log.e("Roomcomment : ", tableexplanation);
 
-                final TextView Group_Explanation = view.findViewById(R.id.group_explanation);
+                Group_Explanation = view.findViewById(R.id.group_explanation);
                 if(tableexplanation == null){
+                    Log.e("TAG : ", "a");
                     Group_Explanation.setText(tablename + "방 입니다.");
                 }else{
                     Group_Explanation.setText(tableexplanation);

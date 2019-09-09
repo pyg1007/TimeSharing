@@ -70,10 +70,10 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.multipleadd:
-//                Intent intent = new Intent(getApplicationContext(), UserCheckboxlist.class);
-//                intent.putExtra("id",userid);
-//                startActivity(intent);
-//                finish();
+                Intent intent = new Intent(getApplicationContext(), CheckboxList.class);
+                intent.putExtra("id",userid);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -96,8 +96,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
                 wr.write(data);
                 wr.flush();
-
-
 
                 InputStream inputStream = urlConnection.getInputStream();
 
