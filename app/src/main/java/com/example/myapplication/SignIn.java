@@ -29,6 +29,9 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
 
     private Button Sign_in;
     private Button Cancle;
+    private Button Id_duplicate;
+
+    private boolean Id_Check = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,9 +40,11 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
 
         Sign_in = findViewById(R.id.add_account_confirm);
         Cancle = findViewById(R.id.add_account_cancel);
+        Id_duplicate = findViewById(R.id.ID_confirm_btn);
 
         Sign_in.setOnClickListener(this);
         Cancle.setOnClickListener(this);
+        Id_duplicate.setOnClickListener(this);
 
         user_id = findViewById(R.id.ID_Text);
         user_password = findViewById(R.id.PW_Text);
@@ -66,70 +71,120 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
                 }
                 else if(!string_user_password.equals(string_user_password_check)){
                     Toast.makeText(this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                }else {
-                    InsertToDB(string_user_id, string_user_password, string_user_name);
+                }else if(!Id_Check) {
+                    Toast.makeText(this,"중복확인을 해주세요.", Toast.LENGTH_SHORT).show();
+                }else{
+                    new InsertData().execute(string_user_id,string_user_password,string_user_name);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }
                 break;
             case R.id.add_account_cancel:
-                //한번더확인하는 다이얼로그?
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
+                break;
+            case R.id.ID_confirm_btn:
+                if(string_user_id.equals("")){
+                    Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }else{
+                    new Idcheck().execute(string_user_id);
+                }
                 break;
         }
     }
 
-    public void InsertToDB(String Id, String Pw, String Name){
-        class InsertData extends AsyncTask<String, Void, String>{
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
+    public class InsertData extends AsyncTask<String, Void, String>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-            }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+        }
 
-            @Override
-            protected String doInBackground(String... strings) {
-                try{
-                    String Id = strings[0];
-                    String Pw = strings[1];
-                    String Name = strings[2];
+        @Override
+        protected String doInBackground(String... strings) {
+            try{
+                String Id = strings[0];
+                String Pw = strings[1];
+                String Name = strings[2];
 
-                    String link = "http://pyg941007.dothome.co.kr/Signin.php";
-                    String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
-                    data += "&" + URLEncoder.encode("Pw","UTF-8") + "=" + URLEncoder.encode(Pw,"UTF-8");
-                    data += "&" + URLEncoder.encode("Name","UTF-8") + "=" + URLEncoder.encode(Name,"UTF-8");
+                String link = "http://pyg941007.dothome.co.kr/Signin.php";
+                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
+                data += "&" + URLEncoder.encode("Pw","UTF-8") + "=" + URLEncoder.encode(Pw,"UTF-8");
+                data += "&" + URLEncoder.encode("Name","UTF-8") + "=" + URLEncoder.encode(Name,"UTF-8");
 
-                    URL url = new URL(link);
-                    URLConnection conn = url.openConnection();
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
 
-                    conn.setDoOutput(true);
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
-                    wr.flush();
+                wr.write(data);
+                wr.flush();
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                    StringBuilder sb = new StringBuilder();
-                    String line = null;
+                StringBuilder sb = new StringBuilder();
+                String line = null;
 
-                    while ((line = reader.readLine())!=null){
-                        sb.append(line);
-                        break;
-                    }
-                    return sb.toString();
-                }catch (Exception e){
-                    return new String("Exception : " + e.getMessage());
+                while ((line = reader.readLine())!=null){
+                    sb.append(line);
+                    break;
                 }
+                return sb.toString();
+            }catch (Exception e){
+                return new String("Exception : " + e.getMessage());
             }
         }
-        InsertData task = new InsertData();
-        task.execute(Id,Pw,Name);
+    }
+
+    public class Idcheck extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try{
+                String Id = strings[0];
+                String link = "http://pyg941007.dothome.co.kr/id_chk.php";
+                String data = URLEncoder.encode("Id", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
+
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while ((line = reader.readLine())!=null){
+                    sb.append(line);
+                    break;
+                }
+                return sb.toString();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if(s.equals("success")){
+                Id_Check = false;
+                Toast.makeText(SignIn.this, "이미 아이디가 존재합니다.", Toast.LENGTH_SHORT).show();
+            }else if(s.equals("failure")){
+                Id_Check = true;
+                Toast.makeText(SignIn.this, "가입 가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -52,11 +52,10 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private String tablename;
     private String userid;
     private TextView DateTextView;
-    private String Explanation;
     private ActionBarDrawerToggle drawerToggle;
     private View view;
 
-    private MyItemManager myItemManager;
+    private ShareItem shareItem;
 
     private int _ID;
     private String Title, ID, Contents, Previoustime, Aftertime, savedate;
@@ -72,7 +71,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        myItemManager = new MyItemManager();
+        shareItem = new ShareItem();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -343,7 +342,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) { // 날자번경시 리스트보이게
                         myItemList.clear();
-                        myItemManager.clear();
                         int year = date.getYear();
                         int month = date.getMonth();
                         int day = date.getDay();
@@ -357,16 +355,16 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                         for(int i=0; i<myItems.size(); i++){
                             if(dates.equals(myItems.get(i).getSavedate())){
-                                myItemManager.addmember(myItems.get(i).getUserid(), myItems.get(i).getPrevioustime(),myItems.get(i).getAftertime());
+                                shareItem.addmember(myItems.get(i).getUserid(), myItems.get(i).getPrevioustime(),myItems.get(i).getAftertime());
                             }
                         }
 //
                         try {
                             int index = 0;
                             for (int i = 0; i < 24; i++) {
-                                if (myItemManager.getMembercount(i) > 0) {
+                                if (shareItem.getMembercount(i) > 0) {
                                     Log.e("index : " , String.valueOf(index));
-                                    myItemList.add(new MyItem(myItems.get(index).getIndex(), myItemManager.getMember(i), myItems.get(index).getTitle(), myItems.get(index).getContents(), myItemManager.getStartTime(i), myItemManager.getEndTime(i), myItems.get(index).getSavedate()));
+                                    myItemList.add(new MyItem(myItems.get(index).getIndex(), shareItem.getMember(i), myItems.get(index).getTitle(), myItems.get(index).getContents(), shareItem.getStartTime(i), shareItem.getEndTime(i), myItems.get(index).getSavedate()));
 
                                     index++;
                                 }

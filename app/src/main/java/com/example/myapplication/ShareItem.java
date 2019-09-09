@@ -1,12 +1,11 @@
 package com.example.myapplication;
 
-
-public class MyItemManager {
+public class ShareItem {
 
     private String[] member;
     private int[] membercount;
 
-    public MyItemManager(){
+    public ShareItem(){
         member = new String[24];
         membercount = new int[24];
         for(int i =0; i<member.length; i++){
