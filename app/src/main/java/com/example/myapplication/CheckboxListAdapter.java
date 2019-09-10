@@ -1,13 +1,11 @@
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,11 +38,20 @@ public class CheckboxListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
+        protected TextView textView;
         protected CheckBox checkBox;
     }
 
     public void setChecked(int position){
         isCheckedConfrim[position] = !isCheckedConfrim[position];
+    }
+
+    public boolean ischeck(int position){
+        if(isCheckedConfrim[position]){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -56,6 +63,7 @@ public class CheckboxListAdapter extends BaseAdapter {
             view = layoutInflater.inflate(R.layout.multiple_add, null);
             viewHolder = new ViewHolder();
             viewHolder.checkBox = (CheckBox) view.findViewById(R.id.check);
+            viewHolder.textView = (TextView) view.findViewById(R.id.label);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -63,6 +71,7 @@ public class CheckboxListAdapter extends BaseAdapter {
         viewHolder.checkBox.setClickable(false);
         viewHolder.checkBox.setFocusable(false);
 
+        viewHolder.textView.setText(getItem(i));
         viewHolder.checkBox.setChecked(isCheckedConfrim[i]);
         return view;
     }

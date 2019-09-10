@@ -31,6 +31,7 @@ public class CheckboxList extends AppCompatActivity {
     private ListView checkboxlistView;
     private String userid;
     private List<String> checkboxListItems;
+    private List<String> members;
 
     private CheckboxListAdapter checkboxListAdapter;
 
@@ -39,9 +40,11 @@ public class CheckboxList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkbox_list);
 
+        members = new ArrayList<>();
+
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
-
+        members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
 
         new GetMemeber().execute();
@@ -122,6 +125,12 @@ public class CheckboxList extends AppCompatActivity {
                 Log.e("TAG : ", parent.getItemAtPosition(position).toString() + view.getId());
                 checkboxListAdapter.setChecked(position);
                 checkboxListAdapter.notifyDataSetChanged();
+                if(checkboxListAdapter.ischeck(position)){
+                    members.add(parent.getItemAtPosition(position).toString());
+                }else{
+                    members.remove(parent.getItemAtPosition(position).toString());
+                }
+                Log.e("members : ", String.valueOf(members.size()));
             }
         };
     }
