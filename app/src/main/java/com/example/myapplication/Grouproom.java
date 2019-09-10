@@ -120,7 +120,7 @@ public class Grouproom extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent intent = new Intent(Grouproom.this, Group.class);
                         intent.putExtra("GroupName", tablelist.get(position));
-                        intent.putExtra("userid", userid);
+                        intent.putExtra("id", userid);
                         startActivity(intent);
                         finish();
                     }

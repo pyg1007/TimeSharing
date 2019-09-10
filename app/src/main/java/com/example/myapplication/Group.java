@@ -71,6 +71,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private Button Exit;
     private Button Invite;
 
+    private boolean Invite_check = false; // 초대버튼으로 왔는지 아닌지 체크용
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         Intent intent = getIntent();
         tablename = intent.getStringExtra("GroupName");
-        userid = intent.getStringExtra("userid");
+        userid = intent.getStringExtra("id");
         members = intent.getStringArrayListExtra("memberid");
 
         if(members == null){
@@ -169,6 +171,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 case R.id.back_icon:
                     Intent intent = new Intent(Group.this, Grouproom.class);
                     intent.putExtra("id", userid);
+                    Log.e("userid", userid);
                     startActivity(intent);
                     finish();
                     break;
@@ -333,7 +336,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
-                Log.e("share : ", result);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
                 int count = 0;

@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,14 +30,19 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckboxList extends AppCompatActivity {
+public class CheckboxList extends AppCompatActivity implements View.OnClickListener{
 
     private ListView checkboxlistView;
     private String userid;
     private List<String> checkboxListItems;
-    private List<String> members;
+    private ArrayList<String> members;
+    String Tablename;
+
+    private boolean flag = false;
 
     private CheckboxListAdapter checkboxListAdapter;
+
+    private Button Invate_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +53,59 @@ public class CheckboxList extends AppCompatActivity {
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
+        flag = intent.getBooleanExtra("flag",false);
         members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
+        Invate_btn = findViewById(R.id.Invate);
+        Invate_btn.setOnClickListener(this);
 
         new GetMemeber().execute();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.Invate:
+                if(flag == true) {
+                    Intent getintent = getIntent();
+                    Tablename = getintent.getStringExtra("tablename");
+                    Intent intent = new Intent(CheckboxList.this, Group.class);
+                    for(int i = 0; i < members.size(); i++){
+                        new Insertdata().execute(members.get(i));
+                    }
+                    intent.putExtra("id", userid);
+                    intent.putStringArrayListExtra("memberid", members);
+                    intent.putExtra("GroupName",Tablename);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    final EditText et = new EditText(CheckboxList.this);
+                    AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
+                    ad.setTitle("그룹명")
+                            .setMessage("그룹명을 입력해 주세요.")
+                            .setView(et)
+                            .setCancelable(false)
+                            .setPositiveButton("생성", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Tablename = et.getText().toString().trim();
+                                    dialogInterface.dismiss();
+                                    for (int count = 0; count<members.size(); count++) {
+                                        new Insertdata().execute(members.get(count));
+                                    }
+                                    new Tablecreate().execute();
+                                }
+                            });
+                    ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(CheckboxList.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    ad.show();
+                }
+                break;
+        }
     }
 
     public class GetMemeber extends AsyncTask<Void, Void, String>{
@@ -135,10 +193,125 @@ public class CheckboxList extends AppCompatActivity {
         };
     }
 
-    private String isCheckedOrNot(CheckBox checkbox) {
-        if(checkbox.isChecked())
-            return "is checked";
-        else
-            return "is not checked";
+    public class Insertdata extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/aa.php";
+
+
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+
+                bufferedReader.close();
+                inputStream.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                Log.e("insert : ", s);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class Tablecreate extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/group_room.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+
+                bufferedReader.close();
+                inputStream.close();
+
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                Log.e("result : ", s);
+                if(s.equals("failure")){
+                    Toast.makeText(CheckboxList.this, "이미 동일한 그룹명이 존재합니다.", Toast.LENGTH_SHORT).show();
+                } else if (s.equals("success")) {
+                    Toast.makeText(CheckboxList.this, "그룹생성 성공", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CheckboxList.this, Group.class);
+                    intent.putExtra("GroupName", Tablename);
+                    intent.putExtra("id", userid);
+                    intent.putStringArrayListExtra("memberid", members);
+                    startActivity(intent);
+                    finish();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, Schedule.class);
+        intent.putExtra("id", userid);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

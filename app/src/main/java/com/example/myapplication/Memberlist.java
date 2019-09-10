@@ -203,7 +203,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         protected String doInBackground(String... strings) {
             try {
                 String link = "http://pyg941007.dothome.co.kr/group_room.php";
-                String data = URLEncoder.encode("Tn", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
 
                 URL url = new URL(link);
 
