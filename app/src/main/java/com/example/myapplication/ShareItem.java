@@ -1,11 +1,18 @@
 package com.example.myapplication;
 
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShareItem {
 
     private String[] member;
     private int[] membercount;
+    private List<ShareData> shareDataList;
 
     public ShareItem(){
+        shareDataList = new ArrayList<>();
         member = new String[24];
         membercount = new int[24];
         for(int i =0; i<member.length; i++){
@@ -46,17 +53,41 @@ public class ShareItem {
         int endTime = Integer.parseInt(aftertime.substring(0,2));
         for(int i = startTime; i<endTime; i++) {
             member[i] += memberid;
-            if(i<endTime-1){
-                member[i] += ",";
-            }
             membercount[i] ++;
         }
     }
 
-    public void clear(){
-        for(int i =0; i<24; i++){
-            member[i] = "";
-            membercount[i] = 0;
+    public void addmember(MyItem myItem){
+        int startTime = Integer.parseInt(myItem.getPrevioustime().substring(0,2));
+        int endTime = Integer.parseInt(myItem.getAftertime().substring(0,2));
+        Log.e("myItem : ", String.valueOf(myItem));
+        for(int i = startTime; i<endTime; i++) {
+            member[i] += myItem.getUserid();
+            membercount[i] ++;
+            ShareData shareData = check(i);
+            if(shareData == null)
+                shareDataList.add(new ShareData(myItem,i));
+            else{
+                shareData.addmember(myItem.getUserid());
+            }
         }
+    }
+
+    public ShareData check(int Nowtime){
+        String time = Nowtime + " : 00";
+        for(int i=0; i<shareDataList.size(); i++){
+            if(time.equals(shareDataList.get(i).getStartTime())){
+                return shareDataList.get(i);
+            }
+        }
+        return null;
+    }
+
+    public List<ShareData> get_List(){
+        return shareDataList;
+    }
+
+    public void clear(){
+        shareDataList.clear();
     }
 }

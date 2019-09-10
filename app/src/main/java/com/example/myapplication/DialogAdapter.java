@@ -12,22 +12,22 @@ import java.util.List;
 
 public class DialogAdapter extends BaseAdapter {
 
-    private List<MyItem> myItem;
-    private MyItem item;
+    private List<ShareData> shareDataList;
+    private ShareData shareData;
 
 
-    public DialogAdapter(List<MyItem> myItems) {
-        this.myItem = myItems;
+    public DialogAdapter(List<ShareData> shareData) {
+        this.shareDataList = shareData;
     }
 
     @Override
     public int getCount() {
-        return myItem.size();
+        return shareDataList.size();
     }
 
     @Override
-    public MyItem getItem(int i) {
-        return myItem.get(i);
+    public ShareData getItem(int i) {
+        return shareDataList.get(i);
     }
 
     @Override
@@ -46,13 +46,13 @@ public class DialogAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.dialogitem, viewGroup, false);
         }
 
-        item = getItem(i);
+        shareData = getItem(i);
 
         TextView Time = (TextView)view.findViewById(R.id.time);
         TextView Members = (TextView)view.findViewById(R.id.members);
 
-        Time.setText(item.getPrevioustime() + " ~ " + item.getAftertime());
-        Members.setText(item.getUserid());
+        Time.setText(shareData.getStartTime() + " ~ " + shareData.getEndTime());
+        Members.setText(shareData.getMemeberid());
 
         return view;
     }

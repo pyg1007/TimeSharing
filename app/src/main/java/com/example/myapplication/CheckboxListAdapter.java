@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +14,24 @@ import java.util.List;
 
 public class CheckboxListAdapter extends BaseAdapter {
 
-    private List<CheckboxListItem> checkboxListItems;
-    private boolean CheckItem_flag = false;
-    private Activity contexts;
+    private List<String> checkboxList;
+    private boolean[] isCheckedConfrim;
+    private LayoutInflater layoutInflater;
 
-    public CheckboxListAdapter(Activity context, List<CheckboxListItem> checkboxListItemList){
-        this.checkboxListItems = checkboxListItemList;
-        this.contexts = context;
+    public CheckboxListAdapter(Context context, List<String> checkboxListItemList){
+        layoutInflater = LayoutInflater.from(context);
+        this.checkboxList = checkboxListItemList;
+        this.isCheckedConfrim = new boolean[checkboxList.size()];
     }
 
     @Override
     public int getCount() {
-        return checkboxListItems.size();
+        return checkboxList.size();
     }
 
     @Override
-    public CheckboxListItem getItem(int i) {
-        return checkboxListItems.get(i);
+    public String getItem(int i) {
+        return checkboxList.get(i);
     }
 
     @Override
@@ -38,8 +40,11 @@ public class CheckboxListAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        protected TextView textView;
         protected CheckBox checkBox;
+    }
+
+    public void setChecked(int position){
+        isCheckedConfrim[position] = !isCheckedConfrim[position];
     }
 
     @Override
@@ -48,29 +53,17 @@ public class CheckboxListAdapter extends BaseAdapter {
         ViewHolder viewHolder = null;
 
         if (view == null) {
-            LayoutInflater inflator = contexts.getLayoutInflater();
-            view = inflator.inflate(R.layout.multiple_add, null);
+            view = layoutInflater.inflate(R.layout.multiple_add, null);
             viewHolder = new ViewHolder();
-            viewHolder.textView = (TextView) view.findViewById(R.id.label);
             viewHolder.checkBox = (CheckBox) view.findViewById(R.id.check);
-            viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    int getPosition = (Integer) buttonView.getTag();  // Here we get the position that we have set for the checkbox using setTag.
-                    checkboxListItems.get(getPosition).setSelected(buttonView.isChecked()); // Set the value of checkbox to maintain its state.
-                }
-            });
             view.setTag(viewHolder);
-            view.setTag(R.id.label, viewHolder.textView);
-            view.setTag(R.id.check, viewHolder.checkBox);
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-        viewHolder.checkBox.setTag(i); // This line is important.
+        viewHolder.checkBox.setClickable(false);
+        viewHolder.checkBox.setFocusable(false);
 
-        viewHolder.textView.setText(checkboxListItems.get(i).getUserid());
-        viewHolder.checkBox.setChecked(checkboxListItems.get(i).isSelected());
+        viewHolder.checkBox.setChecked(isCheckedConfrim[i]);
         return view;
     }
 }

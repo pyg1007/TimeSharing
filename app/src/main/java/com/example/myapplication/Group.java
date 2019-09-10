@@ -333,6 +333,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
+                Log.e("share : ", result);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
                 int count = 0;
@@ -356,10 +357,12 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     days.add(day);
                     count++;
                 }
+
                 materialCalendarView.addDecorator(new EventDecorator(Color.RED, days));
                 materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
                     @Override
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) { // 날자번경시 리스트보이게
+                        shareItem.clear();
                         myItemList.clear();
                         int year = date.getYear();
                         int month = date.getMonth();
@@ -374,22 +377,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
                         for(int i=0; i<myItems.size(); i++){
                             if(dates.equals(myItems.get(i).getSavedate())){
-                                shareItem.addmember(myItems.get(i).getUserid(), myItems.get(i).getPrevioustime(),myItems.get(i).getAftertime());
+                                shareItem.addmember(myItems.get(i));
                             }
-                        }
-//
-                        try {
-                            int index = 0;
-                            for (int i = 0; i < 24; i++) {
-                                if (shareItem.getMembercount(i) > 0) {
-                                    Log.e("index : " , String.valueOf(index));
-                                    myItemList.add(new MyItem(myItems.get(index).getIndex(), shareItem.getMember(i), myItems.get(index).getTitle(), myItems.get(index).getContents(), shareItem.getStartTime(i), shareItem.getEndTime(i), myItems.get(index).getSavedate()));
-
-                                    index++;
-                                }
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
                         }
 
                         AlertDialog.Builder ad = new AlertDialog.Builder(Group.this);
@@ -398,7 +387,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                         ad.setView(view).setCancelable(false);
 
                         final ListView listView = view.findViewById(R.id.dialog_list);
-                        DialogAdapter dialogAdapter = new DialogAdapter(myItemList);
+                        DialogAdapter dialogAdapter = new DialogAdapter(shareItem.get_List());
                         listView.setAdapter(dialogAdapter);
 
                         ad.setTitle(dates + " "+ "공유일정");
@@ -601,7 +590,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 Log.e("Roomcomment : ", tableexplanation);
 
                 Group_Explanation = view.findViewById(R.id.group_explanation);
-                if(tableexplanation == null){
+                if(tableexplanation.equals("null")){
                     Log.e("TAG : ", "a");
                     Group_Explanation.setText(tablename + "방 입니다.");
                 }else{

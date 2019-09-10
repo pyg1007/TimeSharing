@@ -30,7 +30,7 @@ public class CheckboxList extends AppCompatActivity {
 
     private ListView checkboxlistView;
     private String userid;
-    private List<CheckboxListItem> checkboxListItems;
+    private List<String> checkboxListItems;
 
     private CheckboxListAdapter checkboxListAdapter;
 
@@ -47,7 +47,7 @@ public class CheckboxList extends AppCompatActivity {
         new GetMemeber().execute();
     }
 
-    public class GetMemeber extends AsyncTask<Void, Void, String> implements AdapterView.OnItemClickListener {
+    public class GetMemeber extends AsyncTask<Void, Void, String>{
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -105,9 +105,7 @@ public class CheckboxList extends AppCompatActivity {
 
                     userID = object.getString("id");
 
-
-                    CheckboxListItem checkboxListItem = new CheckboxListItem(userID);
-                    checkboxListItems.add(checkboxListItem);
+                    checkboxListItems.add(userID);
                     count++;
                 }
             } catch (Exception e) {
@@ -116,15 +114,16 @@ public class CheckboxList extends AppCompatActivity {
 
             checkboxListAdapter = new CheckboxListAdapter(CheckboxList.this,checkboxListItems);
             checkboxlistView.setAdapter(checkboxListAdapter);
+            checkboxlistView.setOnItemClickListener(mItemClickListener);
         }
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            TextView textView = (TextView)view.getTag(R.id.label);
-            CheckBox checkBox = (CheckBox)view.getTag(R.id.check);
-            Log.e("TAG : ", isCheckedOrNot(checkBox));
-            //Toast.makeText(CheckboxList.this, Toast.LENGTH_LONG).show();
-        }
+        private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("TAG : ", parent.getItemAtPosition(position).toString() + view.getId());
+                checkboxListAdapter.setChecked(position);
+                checkboxListAdapter.notifyDataSetChanged();
+            }
+        };
     }
 
     private String isCheckedOrNot(CheckBox checkbox) {
