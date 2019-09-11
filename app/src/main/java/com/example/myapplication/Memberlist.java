@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -79,7 +80,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
     }
 
 
-    public class BackgroundTask extends AsyncTask<Void, Void, String> implements View.OnClickListener{
+    public class BackgroundTask extends AsyncTask<Void, Void, String> implements View.OnClickListener {
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -132,9 +133,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
             listView = (ListView) findViewById(R.id.listView);
             userList = new ArrayList<User>();
 
-            adapter = new UserListAdapter(userList);
-            listView.setAdapter(adapter);
-
             try {
                 JSONObject jsonObject = new JSONObject(result);
 
@@ -154,7 +152,8 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                     userList.add(user);
                     count++;
                 }
-
+                adapter = new UserListAdapter(userList);
+                listView.setAdapter(adapter);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -165,7 +164,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         public void onClick(View view) {
             View parentview = (View)view.getParent();
             TextView useridtext = parentview.findViewById(R.id.userID);
-            String position = (String) parentview.getTag();
             memberid = useridtext.getText().toString().trim();
             Members.add(memberid);
             final EditText et = new EditText(Memberlist.this);
@@ -193,8 +191,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 }
             });
             ad.show();
-
-            Log.e("TAG : ", position + " "+ useridtext.getText().toString());
         }
     }
 
@@ -242,7 +238,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try {
-                Log.e("result : ", s);
                 if(s.equals("failure")){
                     Toast.makeText(Memberlist.this, "이미 동일한 그룹명이 존재합니다.", Toast.LENGTH_SHORT).show();
                 } else if (s.equals("success")) {
@@ -305,11 +300,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try {
-                Log.e("insert : ", s);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 

@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -146,6 +147,12 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onClick(DialogInterface dialogInterface, int i) {
                         new UpdateRoomComment().execute(editText.getText().toString().trim());
                         Group_Explanation.setText(editText.getText().toString().trim());
+                    }
+                });
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(Group.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
                     }
                 });
                 ad.show();

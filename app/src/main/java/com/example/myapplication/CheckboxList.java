@@ -180,7 +180,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("TAG : ", parent.getItemAtPosition(position).toString() + view.getId());
                 checkboxListAdapter.setChecked(position);
                 checkboxListAdapter.notifyDataSetChanged();
                 if(checkboxListAdapter.ischeck(position)){
@@ -188,7 +187,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 }else{
                     members.remove(parent.getItemAtPosition(position).toString());
                 }
-                Log.e("members : ", String.valueOf(members.size()));
             }
         };
     }
@@ -238,11 +236,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try {
-                Log.e("insert : ", s);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 
@@ -290,7 +283,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try {
-                Log.e("result : ", s);
                 if(s.equals("failure")){
                     Toast.makeText(CheckboxList.this, "이미 동일한 그룹명이 존재합니다.", Toast.LENGTH_SHORT).show();
                 } else if (s.equals("success")) {
