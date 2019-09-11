@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener, View.OnClickListener{
+public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
 
     private String tablename;
     private String userid;
@@ -114,8 +114,25 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         Exit = view.findViewById(R.id.exit);
         Invite = view.findViewById(R.id.Invite_list);
-  //      Exit.setOnClickListener(Group.this);
-  //      Invite.setOnClickListener(Group.this);
+        Exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new ExitRoom().execute();
+            }
+        });
+
+        Invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Group.this, CheckboxList.class);
+                Invite_check = true;
+                intent.putExtra("GroupName", tablename);
+                intent.putExtra("id", userid);
+                intent.putExtra("Invate_check", Invite_check);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         Group_Explanation = view.findViewById(R.id.group_explanation);
         Group_Explanation.setOnClickListener(new View.OnClickListener() {
@@ -227,19 +244,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         DateTextView.setTextSize(20);
         DateTextView.setText(date.getYear() + "년" + (date.getMonth()+1) + "월");
     }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.Invite_list:
-                new InviteRoom().execute();
-                break;
-            case R.id.exit:
-                new ExitRoom().execute();
-                break;
-        }
-    }
-
 
     public class Groupadd extends AsyncTask<String, Void, String> {
         @Override
@@ -604,59 +608,12 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         }
     }
 
-    public class InviteRoom extends AsyncTask<String, Void, String>{
-
-        @Override
-        protected String doInBackground(String... strings) { // 수정필요함.
-            try{
-                String link = "http://pyg941007.dothome.co.kr/LookRoomComment.php";
-
-                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
-                data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
-                URL url = new URL(link);
-
-                URLConnection conn = url.openConnection();
-
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-
-                wr.write(data);
-                wr.flush();
-
-                InputStream inputStream = conn.getInputStream();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String temp;
-
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((temp = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(temp + "\n");
-                }
-
-                bufferedReader.close();
-                inputStream.close();
-                wr.close();
-                return  stringBuilder.toString().trim();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-        }
-    }
-
     public class ExitRoom extends AsyncTask<String, Void, String>{
 
         @Override
         protected String doInBackground(String... strings) {
             try{
-                String link = "http://pyg941007.dothome.co.kr/LookRoomComment.php";
+                String link = "http://pyg941007.dothome.co.kr/deleteRoom.php";
 
                 String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
                 data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
@@ -695,6 +652,10 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            Intent intent = new Intent(Group.this, Grouproom.class);
+            intent.putExtra("id", userid);
+            startActivity(intent);
+            finish();
         }
     }
 

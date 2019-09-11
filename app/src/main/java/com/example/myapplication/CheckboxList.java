@@ -68,7 +68,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
             case R.id.Invate:
                 if(flag == true) {
                     Intent getintent = getIntent();
-                    Tablename = getintent.getStringExtra("tablename");
+                    Tablename = getintent.getStringExtra("GroupName");
                     Intent intent = new Intent(CheckboxList.this, Group.class);
                     for(int i = 0; i < members.size(); i++){
                         new Insertdata().execute(members.get(i));
