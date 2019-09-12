@@ -56,7 +56,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         flag = intent.getBooleanExtra("flag",false);
         members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
-        Invate_btn = findViewById(R.id.Invate);
+        Invate_btn = findViewById(R.id.Invite);
         Invate_btn.setOnClickListener(this);
 
         new GetMemeber().execute();
@@ -65,7 +65,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.Invate:
+            case R.id.Invite:
                 if(flag == true) {
                     Intent getintent = getIntent();
                     Tablename = getintent.getStringExtra("GroupName");

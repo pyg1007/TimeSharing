@@ -83,7 +83,8 @@
             android:layout_alignLeft="@+id/pw"
             android:layout_marginTop="-30dp"
             android:background="@android:drawable/editbox_background"
-            android:layout_toRightOf="@+id/account_memo"/>
+            android:layout_toRightOf="@+id/account_memo"
+            android:maxLength="20"/>
 
         <Button
             android:id="@+id/confirm"

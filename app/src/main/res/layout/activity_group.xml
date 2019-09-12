@@ -13,8 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-
     <android.support.design.widget.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="wrap_content"
@@ -23,47 +21,45 @@
         app:headerLayout="@layout/sub_main_nav_header"
         app:menu="@menu/sub_navigation_menu">
 
+
+        <RelativeLayout
+            android:id="@+id/Layout_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="230dp"
+            android:orientation="vertical"
+            android:layout_weight="3">
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"/>
+            </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
-            <LinearLayout
-                android:id="@+id/Layout_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ListView
-                    android:id="@+id/list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="230dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/Layout_2"
+            <Button
+                android:id="@+id/exit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right">
+                android:text="나가기"
+                android:textSize="12dp"/>
 
-                <Button
-                    android:id="@+id/exit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="나가기"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/Invite_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="초대"
-                    android:textSize="20dp" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/Invite_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="초대"
+                android:textSize="12dp"/>
 
         </RelativeLayout>
 
+
     </android.support.design.widget.NavigationView>
-
-
 
 </android.support.v4.widget.DrawerLayout>
