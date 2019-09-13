@@ -33,31 +33,27 @@
             <ListView
                 android:id="@+id/list"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="400dp"
                 android:layout_marginTop="50dp"/>
-            </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/exit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="나가기"
-                android:textSize="12dp"/>
 
             <Button
                 android:id="@+id/Invite_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/list"
                 android:text="초대"
+                android:textSize="12dp" />
+
+            <Button
+                android:id="@+id/exit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/list"
+                android:layout_toRightOf="@+id/Invite_list"
+                android:text="나가기"
                 android:textSize="12dp"/>
 
-        </RelativeLayout>
+            </RelativeLayout>
 
 
     </android.support.design.widget.NavigationView>

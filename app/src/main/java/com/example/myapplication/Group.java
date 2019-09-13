@@ -63,7 +63,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private int _ID;
     private String Title, ID, Contents, Previoustime, Aftertime, savedate;
 
-    private List<String> members; // 넘어온 아이디 명단
+    private ArrayList<String> members; // 넘어온 아이디 명단
     private List<MyItem> myItems; // 전체 스케쥴 리스트
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
 
@@ -113,8 +113,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         view = navigationView.getHeaderView(0);
         new LookupRoomComment().execute();
 
-        Exit = view.findViewById(R.id.exit);
-        Invite = view.findViewById(R.id.Invite_list);
+        Exit = findViewById(R.id.exit);
+        Invite = findViewById(R.id.Invite_list);
         Exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +130,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 intent.putExtra("GroupName", tablename);
                 intent.putExtra("id", userid);
                 intent.putExtra("Invate_check", Invite_check);
+                intent.putStringArrayListExtra("memberid", members);
                 startActivity(intent);
                 finish();
             }
@@ -195,7 +196,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 case R.id.back_icon:
                     Intent intent = new Intent(Group.this, Grouproom.class);
                     intent.putExtra("id", userid);
-                    Log.e("userid", userid);
                     startActivity(intent);
                     finish();
                     break;

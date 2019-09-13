@@ -36,13 +36,15 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
     private String userid;
     private List<String> checkboxListItems;
     private ArrayList<String> members;
+    private ArrayList<String> First_member; // 그룹에서 넘어온 멤버, 백버튼에만사용.
+
     String Tablename;
 
     private boolean flag = false;
 
     private CheckboxListAdapter checkboxListAdapter;
 
-    private Button Invate_btn;
+    private Button Invite_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +55,14 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
-        flag = intent.getBooleanExtra("flag",false);
+        flag = intent.getBooleanExtra("Invate_check",false);
+        if (flag){
+            First_member = intent.getStringArrayListExtra("memberid");
+        }
         members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
-        Invate_btn = findViewById(R.id.Invite);
-        Invate_btn.setOnClickListener(this);
+        Invite_btn = findViewById(R.id.Invite);
+        Invite_btn.setOnClickListener(this);
 
         new GetMemeber().execute();
     }
@@ -301,9 +306,17 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, Schedule.class);
-        intent.putExtra("id", userid);
-        startActivity(intent);
-        super.onBackPressed();
+        if (!flag) {
+            Intent intent = new Intent(this, Schedule.class);
+            intent.putExtra("id", userid);
+            startActivity(intent);
+            super.onBackPressed();
+        }else{
+            Intent intent = new Intent(this, Group.class);
+            intent.putExtra("id", userid);
+            intent.putExtra("memberid",First_member);
+            startActivity(intent);
+            super.onBackPressed();
+        }
     }
 }
