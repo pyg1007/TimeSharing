@@ -297,13 +297,12 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 myItems.remove(select);
                                 DeleteSchedule deleteSchedule = new DeleteSchedule();
                                 deleteSchedule.execute();
-//                                if(showitem.size() ==0) {
-//                                    //materialCalendarView.removeDecorator(eventDecorator);
-//                                    scheduleTask _schduletask = new scheduleTask();
-//                                    _schduletask.execute();
-//                                }
+                                if (showitem.size() ==0){
+                                    materialCalendarView.removeDecorators();
+                                    Calendar_init();
+                                    new scheduleTask().execute();
+                                }
                                 myAdapter.notifyDataSetChanged();
-
                                 break;
                             case R.id.list_menu2:// 편집
                                 Intent intent = new Intent(getApplicationContext(), updatememo.class);

@@ -33,8 +33,8 @@
             <ListView
                 android:id="@+id/list"
                 android:layout_width="wrap_content"
-                android:layout_height="400dp"
-                android:layout_marginTop="50dp"/>
+                android:layout_height="@dimen/list_height"
+                android:layout_marginTop="50dp" />
 
             <Button
                 android:id="@+id/Invite_list"

@@ -58,6 +58,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         flag = intent.getBooleanExtra("Invate_check",false);
         if (flag){
             First_member = intent.getStringArrayListExtra("memberid");
+            Tablename = intent.getStringExtra("GroupName");
         }
         members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
@@ -72,8 +73,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.Invite:
                 if(flag == true) {
-                    Intent getintent = getIntent();
-                    Tablename = getintent.getStringExtra("GroupName");
                     Intent intent = new Intent(CheckboxList.this, Group.class);
                     for(int i = 0; i < members.size(); i++){
                         new Insertdata().execute(members.get(i));
@@ -314,6 +313,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         }else{
             Intent intent = new Intent(this, Group.class);
             intent.putExtra("id", userid);
+            intent.putExtra("GroupName", Tablename);
             intent.putExtra("memberid",First_member);
             startActivity(intent);
             super.onBackPressed();

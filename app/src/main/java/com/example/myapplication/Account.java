@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,8 +32,10 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
 
     private TextView ID;
     private TextView Name;
+    private TextView TextLengthChk;
     private EditText Pw;
     private EditText Pw_chk;
+    private EditText Account_edit;
     private Button confirm;
     private Button cancel;
 
@@ -48,15 +52,31 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         backgroundTask.execute();
 
         ID = findViewById(R.id.Id);
-        ID.setText("아이디 : " + userid);
+        ID.setText("" + userid + "님의 계정정보");
         ID.setTextSize(16);
-
-        //Name = findViewById(R.id.name);
-        //Name.setText(userName);
-        //Name.setTextSize(16);
 
         Pw = findViewById(R.id.pw);
         Pw_chk = findViewById(R.id.pw_chk);
+        TextLengthChk = findViewById(R.id.length_check);
+        Account_edit = findViewById(R.id.account);
+
+        Account_edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String introduction = Account_edit.getText().toString();
+                TextLengthChk.setText(introduction.length() + " / 200글자 수");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         confirm = findViewById(R.id.confirm);
         cancel = findViewById(R.id.cancel);
