@@ -33,6 +33,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
     private TextView ID;
     private TextView Name;
     private TextView TextLengthChk;
+    private TextView PW_realtime_chk;
     private EditText Pw;
     private EditText Pw_chk;
     private EditText Account_edit;
@@ -52,14 +53,35 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         backgroundTask.execute();
 
         ID = findViewById(R.id.Id);
-        ID.setText("" + userid + "님의 계정정보");
+        ID.setText(userid + "님의 계정정보");
         ID.setTextSize(16);
 
         Pw = findViewById(R.id.pw);
         Pw_chk = findViewById(R.id.pw_chk);
+        PW_realtime_chk = findViewById(R.id.Pw_check);
         TextLengthChk = findViewById(R.id.length_check);
         Account_edit = findViewById(R.id.account);
 
+        Pw_chk.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
+                    PW_realtime_chk.setText("비밀번호가 일치하지 않습니다.");
+                }else{
+                    PW_realtime_chk.setText("비밀번호가 일치합니다.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         Account_edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

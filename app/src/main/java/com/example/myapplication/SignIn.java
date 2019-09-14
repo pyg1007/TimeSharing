@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -23,6 +26,8 @@ import java.net.URLEncoder;
 public class SignIn extends AppCompatActivity implements View.OnClickListener{
 
     //UI
+    private TextView Pw_chk;
+
     private EditText user_id;
     private EditText user_password;
     private EditText user_password_confirm;
@@ -47,10 +52,32 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
         Cancle.setOnClickListener(this);
         Id_duplicate.setOnClickListener(this);
 
+        Pw_chk = findViewById(R.id.Pw_realtime_chk);
         user_id = findViewById(R.id.ID_Text);
         user_password = findViewById(R.id.PW_Text);
         user_password_confirm = findViewById(R.id.PW_check_Text);
         user_name = findViewById(R.id.nickname_Text);
+
+        user_password_confirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(user_password.getText().toString().trim().equals(user_password_confirm.getText().toString().trim())) {
+                    Pw_chk.setText("비밀번호가 일치하지 않습니다.");
+                }else {
+                    Pw_chk.setText("비밀번호가 일치합니다.");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override

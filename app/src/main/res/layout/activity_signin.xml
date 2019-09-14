@@ -46,6 +46,13 @@
             android:layout_alignLeft="@+id/ID_textview"
             android:text="이름" />
 
+        <TextView
+            android:id="@+id/Pw_realtime_chk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/PW_check_Text"
+            android:layout_below="@id/PW_check_textview"/>
+
 
         <EditText
             android:id="@+id/ID_Text"

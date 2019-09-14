@@ -51,6 +51,14 @@
             android:text="비밀번호확인" />
 
         <TextView
+            android:id="@+id/Pw_check"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/PW_check_textview"
+            android:layout_toRightOf="@+id/pw_chk"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"></TextView>
+
+        <TextView
             android:id="@+id/account_memo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,8 +69,8 @@
         <TextView
             android:id="@+id/length_check"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/account_memo"
-            android:layout_toRightOf="@+id/account"
+            android:layout_below="@+id/account"
+            android:layout_toLeftOf="@+id/account"
             android:layout_height="wrap_content"></TextView>
 
         <EditText
@@ -96,7 +104,7 @@
             android:id="@+id/confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/account"
+            android:layout_below="@id/length_check"
             android:layout_alignBaseline="@+id/cancel"
             android:layout_marginLeft="70dp"
             android:text="변경" />
@@ -105,7 +113,7 @@
             android:id="@+id/cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/account"
+            android:layout_below="@+id/length_check"
             android:layout_toRightOf="@+id/confirm"
             android:text="취소" />
 
