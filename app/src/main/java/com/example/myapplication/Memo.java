@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,8 +24,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Memo extends AppCompatActivity implements View.OnClickListener {
@@ -31,7 +33,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
 
     private Button Insert_Btn;
     private Button Cancel_Btn;
-    ImageView Spinner_Btn;
+    private ImageView Spinner_Btn;
+    private DatePicker datePicker;
 
 
     private EditText Title_edit;
@@ -132,22 +135,37 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
                 cancel();
                 break;
             case R.id.memo_date_imageView:
-                startActivity(new Intent(getApplicationContext(), SpinnerActivity.class));
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH);
+                int day = c.get(Calendar.DATE);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(Memo.this, listener, year,month,day);
+                datePickerDialog.show();
                 break;
-
         }
     }
+
+    private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            textView.setText(year + "년 " + (month+1) + "월 " + day + "일 ");
+        }
+    };
 
     public void save() {
         Title_edit = findViewById(R.id.memo_title);
         Schedule_edit = findViewById(R.id.memo_contents);
+        int StartTime = Integer.parseInt(Previoustime.substring(0,2));
+        int EndTime = Integer.parseInt(Aftertime.substring(0,2));
         Title = Title_edit.getText().toString();
         Contents = Schedule_edit.getText().toString();
         if (Title.equals("")) {
             Toast.makeText(this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
         } else if (Contents.equals("")) {
             Toast.makeText(this, "내용을 입력해 주세요.", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if(StartTime > EndTime){
+            Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
+        } else{
             InsertToSchedule();
         }
         Intent intent = new Intent(this, Schedule.class);
