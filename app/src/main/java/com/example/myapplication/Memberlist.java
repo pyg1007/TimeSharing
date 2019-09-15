@@ -244,9 +244,10 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                     Toast.makeText(Memberlist.this, "그룹생성 성공", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Memberlist.this, Group.class);
                     intent.putExtra("GroupName", Tablename);
-                    intent.putExtra("userid", userid);
+                    intent.putExtra("id", userid);
                     intent.putStringArrayListExtra("memberid", Members);
                     startActivity(intent);
+                    finish();
                 }
                 Members.remove(memberid);
             }catch (Exception e){
