@@ -50,13 +50,13 @@
             android:layout_alignBaseline="@+id/pw_chk"
             android:text="비밀번호확인" />
 
-        <TextView
+        <ImageView
             android:id="@+id/Pw_check"
             android:layout_width="wrap_content"
             android:layout_below="@+id/PW_check_textview"
             android:layout_toRightOf="@+id/pw_chk"
             android:layout_centerVertical="true"
-            android:layout_height="wrap_content"></TextView>
+            android:layout_height="wrap_content"></ImageView>
 
         <TextView
             android:id="@+id/account_memo"

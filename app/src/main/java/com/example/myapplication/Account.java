@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
     private TextView ID;
     private TextView Name;
     private TextView TextLengthChk;
-    private TextView PW_realtime_chk;
+    private ImageView PW_realtime_chk;
     private EditText Pw;
     private EditText Pw_chk;
     private EditText Account_edit;
@@ -71,9 +72,9 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
-                    PW_realtime_chk.setText("비밀번호가 일치하지 않습니다.");
+                    PW_realtime_chk.setImageResource(R.drawable.circle);
                 }else{
-                    PW_realtime_chk.setText("비밀번호가 일치합니다.");
+                    PW_realtime_chk.setImageResource(android.R.drawable.ic_delete);
                 }
             }
 
