@@ -22,38 +22,46 @@
         app:menu="@menu/sub_navigation_menu">
 
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/Layout_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="230dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="3">
+            android:layout_marginTop="230dp">
 
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/list_height"
-                android:layout_marginTop="50dp" />
+                <ListView
+                    android:id="@+id/list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:layout_marginTop="50dp" />
 
-            <Button
-                android:id="@+id/Invite_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/list"
-                android:text="초대"
-                android:textSize="12dp" />
+                <LinearLayout
+                    android:id="@+id/buttonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/Invite_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/list"
+                        android:text="초대"
+                        android:textSize="12dp" />
 
-            <Button
-                android:id="@+id/exit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/list"
-                android:layout_toRightOf="@+id/Invite_list"
-                android:text="나가기"
-                android:textSize="12dp"/>
-
-            </RelativeLayout>
+                    <Button
+                        android:id="@+id/exit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/list"
+                        android:layout_toRightOf="@+id/Invite_list"
+                        android:text="나가기"
+                        android:textSize="12dp"/>
+                </LinearLayout>
+        </LinearLayout>
 
 
     </android.support.design.widget.NavigationView>
