@@ -20,9 +20,6 @@
         <activity android:name=".Schedule" />
         <activity android:name=".SignIn" />
         <activity android:name=".Memberlist" />
-        <activity
-            android:name=".SpinnerActivity"
-            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

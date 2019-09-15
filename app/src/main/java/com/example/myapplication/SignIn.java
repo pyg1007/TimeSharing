@@ -145,6 +145,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(Id,"UTF-8");
                 data += "&" + URLEncoder.encode("userpassword","UTF-8") + "=" + URLEncoder.encode(Pw,"UTF-8");
                 data += "&" + URLEncoder.encode("username","UTF-8") + "=" + URLEncoder.encode(Name,"UTF-8");
+                data += "&" + URLEncoder.encode("userintroduce","UTF-8") + "=" + URLEncoder.encode(Name+"입니다.","UTF-8");
 
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();

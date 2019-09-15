@@ -170,13 +170,12 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
             Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
         }
         else{
-            updateschedule _updateschedule = new updateschedule();
-            _updateschedule.execute();
+            new updateschedule().execute();
+            Intent intent = new Intent(this, Schedule.class);
+            intent.putExtra("id",userid);
+            startActivity(intent);
+            finish();
         }
-        Intent intent = new Intent(this, Schedule.class);
-        intent.putExtra("id",userid);
-        startActivity(intent);
-        finish();
     }
 
     public void cancle(){

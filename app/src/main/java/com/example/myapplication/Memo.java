@@ -167,11 +167,11 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
         } else{
             InsertToSchedule();
+            Intent intent = new Intent(this, Schedule.class);
+            intent.putExtra("id", userid);
+            startActivity(intent);
+            finish();
         }
-        Intent intent = new Intent(this, Schedule.class);
-        intent.putExtra("id", userid);
-        startActivity(intent);
-        finish();
     }
 
     public void cancel() {

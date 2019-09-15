@@ -29,10 +29,8 @@ import java.util.ArrayList;
 public class Account extends AppCompatActivity implements View.OnClickListener{
 
     private String userid;
-    private String userName;
 
     private TextView ID;
-    private TextView Name;
     private TextView TextLengthChk;
     private ImageView PW_realtime_chk;
     private EditText Pw;
@@ -50,8 +48,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
 
-        BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.execute();
+        new LoadUserinfo().execute();
 
         ID = findViewById(R.id.Id);
         ID.setText(userid + "님의 계정정보");
@@ -132,7 +129,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    public class BackgroundTask extends AsyncTask<Void, Void, String> {
+    public class LoadUserinfo extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -188,15 +185,18 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
                 JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
                 int count = 0;
 
+                String userintroduce = null;
+
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
 
 
-                    userName = object.getString("name");
+                    userintroduce = object.getString("introduce");
 
                     count++;
                 }
 
+                Account_edit.setText(userintroduce);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -212,8 +212,9 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
 
                 String link = "http://pyg941007.dothome.co.kr/updateuser.php";
 
-                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(userid), "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
                 data += "&" + URLEncoder.encode("userpassword","UTF-8") + "=" + URLEncoder.encode(Pw.getText().toString().trim(),"UTF-8");
+                data += "&" + URLEncoder.encode("userintroduce","UTF-8") + "=" + URLEncoder.encode(Account_edit.getText().toString(),"UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -251,6 +252,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
             super.onPostExecute(result);
         }
     }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, Schedule.class);
