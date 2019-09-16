@@ -48,6 +48,7 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.sql.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +71,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private ArrayList<String> members; // 넘어온 아이디 명단
     private List<MyItem> myItems; // 전체 스케쥴 리스트
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
+    private ArrayList<String> memberlist;
 
     private MaterialCalendarView materialCalendarView;
 
@@ -134,7 +136,11 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 intent.putExtra("GroupName", tablename);
                 intent.putExtra("id", userid);
                 intent.putExtra("Invate_check", Invite_check);
-                intent.putStringArrayListExtra("memberid", members);
+                if(members == null){
+                    intent.putStringArrayListExtra("memberid", memberlist);
+                }else{
+                    intent.putStringArrayListExtra("memberid", members);
+                }
                 startActivity(intent);
                 finish();
             }
@@ -468,11 +474,11 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
+                memberlist = new ArrayList<>();
+
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
                 int count = 0;
-
-                List<String> memberlist = new ArrayList<>();
                 String Memberid;
 
                 while (count < jsonArray.length()) {
@@ -483,9 +489,13 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     memberlist.add(Memberid);
                     count++;
                 }
-                ListView listView = findViewById(R.id.list);
-                ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this,android.R.layout.simple_list_item_1,memberlist);
-                listView.setAdapter(arrayAdapter);
+                if(memberlist.size()>0) {
+                    ListView listView = findViewById(R.id.list);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, memberlist);
+                    listView.setAdapter(arrayAdapter);
+                }else{
+                    new DropRoom().execute();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -663,15 +673,61 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            try{
-                Log.e("Exit : ", result);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            new LookupMemeber().execute();
             Intent intent = new Intent(Group.this, Grouproom.class);
             intent.putExtra("id", userid);
             startActivity(intent);
             finish();
+        }
+    }
+
+    public class DropRoom extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/droproom.php";
+
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                Log.e("drop : " , result);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

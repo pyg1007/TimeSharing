@@ -52,6 +52,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_checkbox_list);
 
         members = new ArrayList<>();
+        First_member = new ArrayList<>();
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
@@ -59,13 +60,14 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         if (flag){
             First_member = intent.getStringArrayListExtra("memberid");
             Tablename = intent.getStringExtra("GroupName");
+        }else{
+
         }
         members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
         Invite_btn = findViewById(R.id.Invite);
         Invite_btn.setOnClickListener(this);
-
-        new GetMemeber().execute();
+        new GetMemeber().execute(userid);
     }
 
     @Override
@@ -112,14 +114,14 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public class GetMemeber extends AsyncTask<Void, Void, String>{
+    public class GetMemeber extends AsyncTask<String, Void, String>{
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... strings) {
             try {
 
                 String link = "http://pyg941007.dothome.co.kr/load_member.php";
-                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection urlConnection = url.openConnection();
@@ -303,6 +305,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     @Override
     public void onBackPressed() {
         if (!flag) {

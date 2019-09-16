@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -289,14 +290,13 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                             case R.id.list_menu1: // 삭제
                                 int select = 0,j;
                                 for(j =0; j<myItems.size(); j++){
-                                    if(showitem.get(i).getTitle().equals(myItems.get(j).getTitle())){
+                                    if(showitem.get(i).getTitle().equals(myItems.get(j).getTitle()) && showitem.get(i).getSavedate().equals(myItems.get(j).getSavedate()) && showitem.get(i).getIndex() == myItems.get(j).getIndex()){
                                         select = j;
                                     }
                                 }
+                                new DeleteSchedule().execute(showitem.get(i).getTitle(), showitem.get(i).getSavedate(), String.valueOf(showitem.get(i).getIndex()));
                                 showitem.remove(i);
                                 myItems.remove(select);
-                                DeleteSchedule deleteSchedule = new DeleteSchedule();
-                                deleteSchedule.execute();
                                 if (showitem.size() ==0){
                                     materialCalendarView.removeDecorators();
                                     Calendar_init();
@@ -448,14 +448,17 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    public class DeleteSchedule extends AsyncTask<Void, Void, String>{
+    public class DeleteSchedule extends AsyncTask<String, Void, String>{
 
         @Override
-        protected String doInBackground(Void... voids) {
+        protected String doInBackground(String... strings) {
             try{
                 String link = "http://pyg941007.dothome.co.kr/deleteschedule.php";
 
-                String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(Title, "UTF-8");
+                String data = URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
+                data += "&" + URLEncoder.encode("savedate", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                data += "&" + URLEncoder.encode("index", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
                 URL url = new URL(link);
 
                 URLConnection conn = url.openConnection();
@@ -490,6 +493,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected void onPostExecute(String result){
             super.onPostExecute(result);
+            Log.e("Delete : ", result);
         }
     }
 
