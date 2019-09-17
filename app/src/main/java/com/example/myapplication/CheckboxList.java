@@ -9,12 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -36,7 +33,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
     private String userid;
     private List<String> checkboxListItems;
     private ArrayList<String> members;
-    private ArrayList<String> First_member; // 그룹에서 넘어온 멤버, 백버튼에만사용.
+    private ArrayList<String> members_copy;
 
     String Tablename;
 
@@ -51,22 +48,24 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkbox_list);
 
+
         members = new ArrayList<>();
-        First_member = new ArrayList<>();
+        members_copy = new ArrayList<>();
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
         flag = intent.getBooleanExtra("Invate_check",false);
         if (flag){
-            First_member = intent.getStringArrayListExtra("memberid");
+            members = intent.getStringArrayListExtra("memberid");
+            members_copy = intent.getStringArrayListExtra("memberid");
             Tablename = intent.getStringExtra("GroupName");
         }else{
-
+            members.add(userid);
         }
-        members.add(userid);
         checkboxlistView = findViewById(R.id.checkbox_list);
         Invite_btn = findViewById(R.id.Invite);
         Invite_btn.setOnClickListener(this);
+
         new GetMemeber().execute(userid);
     }
 
@@ -75,40 +74,52 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.Invite:
                 if(flag == true) {
-                    Intent intent = new Intent(CheckboxList.this, Group.class);
-                    for(int i = 0; i < members.size(); i++){
-                        new Insertdata().execute(members.get(i));
-                    }
-                    intent.putExtra("id", userid);
-                    intent.putStringArrayListExtra("memberid", members);
-                    intent.putExtra("GroupName",Tablename);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    final EditText et = new EditText(CheckboxList.this);
-                    AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
-                    ad.setTitle("그룹명")
-                            .setMessage("그룹명을 입력해 주세요.")
-                            .setView(et)
-                            .setCancelable(false)
-                            .setPositiveButton("생성", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    Tablename = et.getText().toString().trim();
-                                    dialogInterface.dismiss();
-                                    for (int count = 0; count<members.size(); count++) {
-                                        new Insertdata().execute(members.get(count));
-                                    }
-                                    new Tablecreate().execute();
-                                }
-                            });
-                    ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(CheckboxList.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                    Log.e("members size : ", String.valueOf(members.size()));
+                    Log.e("copy members size : ", String.valueOf(members_copy.size()));
+                    if(members.size()>members_copy.size()) {
+                        Intent intent = new Intent(CheckboxList.this, Group.class);
+                        for (int i = 0; i < members.size(); i++) {
+                            Log.e("인서트왜됨? : ", "왜되냐고 !!!");
+                            new Insertdata().execute(members.get(i));
                         }
-                    });
-                    ad.show();
+                        intent.putExtra("id", userid);
+                        intent.putStringArrayListExtra("memberid", members);
+                        intent.putExtra("GroupName", Tablename);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(this, "초대할 사람을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    if (members.size()>1) {
+                        final EditText et = new EditText(CheckboxList.this);
+                        AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
+                        ad.setTitle("그룹명")
+                                .setMessage("그룹명을 입력해 주세요.")
+                                .setView(et)
+                                .setCancelable(false)
+                                .setPositiveButton("생성", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Tablename = et.getText().toString().trim();
+                                        dialogInterface.dismiss();
+                                        for (int count = 0; count < members.size(); count++) {
+                                            Log.e("인서트왜됨? : ", "왜되냐고 !!!");
+                                            new Insertdata().execute(members.get(count));
+                                        }
+                                        new Tablecreate().execute();
+                                    }
+                                });
+                        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(CheckboxList.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        ad.show();
+                    }else{
+                        Toast.makeText(this, "초대할 사람을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
         }
@@ -179,6 +190,16 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
 
+            if(flag == true) {
+                for (int i = 0; i < members_copy.size(); i++) {
+                    for (int j = 0; j < checkboxListItems.size(); j++) {
+                        if (members_copy.get(i).equals(checkboxListItems.get(j))) {
+                            checkboxListItems.remove(j);
+                        }
+                    }
+                }
+            }
+
             checkboxListAdapter = new CheckboxListAdapter(CheckboxList.this,checkboxListItems);
             checkboxlistView.setAdapter(checkboxListAdapter);
             checkboxlistView.setOnItemClickListener(mItemClickListener);
@@ -190,6 +211,9 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 checkboxListAdapter.notifyDataSetChanged();
                 if(checkboxListAdapter.ischeck(position)){
                     members.add(parent.getItemAtPosition(position).toString());
+                    Log.e("size : ", String.valueOf(members.size()));
+                    if(flag)
+                        Log.e("copy size : ", String.valueOf(members_copy.size()));
                 }else{
                     members.remove(parent.getItemAtPosition(position).toString());
                 }
@@ -317,7 +341,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, Group.class);
             intent.putExtra("id", userid);
             intent.putExtra("GroupName", Tablename);
-            intent.putExtra("memberid",First_member);
+            intent.putExtra("memberid",members);
             startActivity(intent);
             super.onBackPressed();
         }

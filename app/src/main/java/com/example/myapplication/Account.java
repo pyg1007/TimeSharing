@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,12 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
     private EditText Account_edit;
     private Button confirm;
     private Button cancel;
+
+    /*
+    화면 터치시 키보드 내려가는것을 위함.
+     */
+    private InputMethodManager imm;
+    private RelativeLayout relativeLayout;
 
 
     @Override
@@ -69,9 +77,9 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
-                    PW_realtime_chk.setImageResource(R.drawable.circle);
-                }else{
                     PW_realtime_chk.setImageResource(android.R.drawable.ic_delete);
+                }else{
+                    PW_realtime_chk.setImageResource(R.drawable.circle);
                 }
             }
 
@@ -102,6 +110,19 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         cancel = findViewById(R.id.cancel);
         confirm.setOnClickListener(this);
         cancel.setOnClickListener(this);
+
+        /*
+        화면 클릭시 키보드 내려가게 하는 부분
+         */
+        relativeLayout = findViewById(R.id.FullScreen);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm.hideSoftInputFromWindow(Pw.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(Pw_chk.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(Account_edit.getWindowToken(),0);
+            }
+        });
     }
 
     @Override

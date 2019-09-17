@@ -7,15 +7,29 @@
     android:orientation="vertical"
     tools:context=".CheckboxList">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary">
+        <TextView
+            android:text="회원목록"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
+    </android.support.v7.widget.Toolbar>
     <ListView
         android:id="@+id/checkbox_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_weight="9.5"
+        android:layout_height="match_parent"/>
 
     <Button
         android:id="@+id/Invite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_weight="0.5"
         android:text="초대"/>
 
 </LinearLayout>

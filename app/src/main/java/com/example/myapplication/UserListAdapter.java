@@ -50,13 +50,7 @@ public class UserListAdapter extends BaseAdapter{
         user = getItem(i);
 
         TextView userID = (TextView)view.findViewById(R.id.userID);
-        ImageButton add_button = (ImageButton) view.findViewById(R.id.group_add);
-        add_button.setOnClickListener(user.getOnClickListener());
         userID.setText(user.getUserID());
-
-        userID.setTag("1");
-        add_button.setTag("2");
-        view.setTag("" + i);
 
         return view;
     }

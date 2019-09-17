@@ -7,8 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
@@ -36,7 +38,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final long FINISH_TIMER = 2000;
     private long backpresstimer = 0;
 
-
+    /*
+    화면 터치시 키보드 내려가는것을 위함.
+     */
+    private InputMethodManager imm;
+    private RelativeLayout relativeLayout;
 
     private String userID;
     private String userPW;
@@ -58,10 +64,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ID = findViewById(R.id.ID_Text);
         PW = findViewById(R.id.PW_Text);
 
-        getDPI();
-
+        /*
+        화면 클릭시 키보드 내려가게 하는 부분
+         */
+        relativeLayout = findViewById(R.id.FullScreen);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(ID.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(PW.getWindowToken(),0);
+            }
+        });
     }
 
+    /*
+    해당 디바이스 기기 해상도 구하는 메소드
+     */
     public void getDPI(){
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

@@ -15,14 +15,14 @@
         android:textColor="#33aabb"
         android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/group_add"
-        android:src="@drawable/ic_add_black_24dp"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <!--    </LinearLayout>-->
+    <!--<ImageButton-->
+        <!--android:id="@+id/group_add"-->
+        <!--android:src="@drawable/ic_add_black_24dp"-->
+        <!--android:focusableInTouchMode="false"-->
+        <!--android:focusable="false"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
+    <!--&lt;!&ndash;    </LinearLayout>&ndash;&gt;-->
 
 </LinearLayout>
 

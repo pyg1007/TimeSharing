@@ -79,8 +79,37 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    public void makedialog(View view){
+        final EditText et = new EditText(Memberlist.this);
+        TextView Idtext = view.findViewById(R.id.Id);
+        Members.add(Idtext.getText().toString());
+        AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
+        ad.setTitle("그룹명")
+                .setMessage("그룹명을 입력해 주세요.")
+                .setView(et)
+                .setCancelable(false)
+                .setPositiveButton("생성", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Tablename = et.getText().toString().trim();
+                        dialogInterface.dismiss();
+                        for (int count = 0; count<Members.size(); count++) {
+                            new Insertdata().execute(Members.get(count));
+                        }
+                        new Tablecreate().execute();
+                    }
+                });
+        ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(Memberlist.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                Members.remove(memberid);
+            }
+        });
+        ad.show();
+    }
 
-    public class BackgroundTask extends AsyncTask<Void, Void, String> implements View.OnClickListener {
+    public class BackgroundTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -147,50 +176,23 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                     userID = object.getString("id");
 
 
-                    User user = new User(userID, this);
+                    User user = new User(userID);
 
                     userList.add(user);
                     count++;
                 }
                 adapter = new UserListAdapter(userList);
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        new UserIntrudece().execute(userList.get(position).getUserID());
+                    }
+                });
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        @Override
-        public void onClick(View view) {
-            View parentview = (View)view.getParent();
-            TextView useridtext = parentview.findViewById(R.id.userID);
-            memberid = useridtext.getText().toString().trim();
-            Members.add(memberid);
-            final EditText et = new EditText(Memberlist.this);
-            AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
-            ad.setTitle("그룹명")
-                    .setMessage("그룹명을 입력해 주세요.")
-                    .setView(et)
-                    .setCancelable(false)
-                    .setPositiveButton("생성", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Tablename = et.getText().toString().trim();
-                            dialogInterface.dismiss();
-                            for (int count = 0; count<Members.size(); count++) {
-                                new Insertdata().execute(Members.get(count));
-                            }
-                            new Tablecreate().execute();
-                        }
-                    });
-            ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Toast.makeText(Memberlist.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
-                    Members.remove(memberid);
-                }
-            });
-            ad.show();
         }
     }
 
@@ -251,6 +253,86 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 }
                 Members.remove(memberid);
             }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class UserIntrudece extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/user_info.php";
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+
+                bufferedReader.close();
+                inputStream.close();
+
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+
+                JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
+                int count = 0;
+
+                String userID = null, userName = null, userIntroduce = null;
+
+                JSONObject object = jsonArray.getJSONObject(count);
+                userID = object.getString("id");
+                userName = object.getString("name");
+                userIntroduce = object.getString("introduce");
+
+                final View Dialogview = getLayoutInflater().inflate(R.layout.dialog, null);
+                TextView Idtext = Dialogview.findViewById(R.id.Id);
+                TextView Nametext = Dialogview.findViewById(R.id.Name);
+                TextView Introduce = Dialogview.findViewById(R.id.Introduce);
+                Idtext.setText(userID);
+                Nametext.setText(userName);
+                Introduce.setText(userIntroduce);
+                AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
+                ad.setView(Dialogview).setTitle(userID + "님의 회원정보");
+                ad.setPositiveButton("초대하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        makedialog(Dialogview);
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -29,9 +29,7 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="#d1d1d1"
-            android:layout_below="@+id/Text_Title"
-            android:dividerHeight="10dp">
+            android:layout_below="@+id/Text_Title">
 
         </ListView>
         <android.support.design.widget.FloatingActionButton

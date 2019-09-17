@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,12 +36,9 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
     private Button Insert_Btn;
     private Button Cancel_Btn;
     private ImageView Spinner_Btn;
-    private DatePicker datePicker;
-
 
     private EditText Title_edit;
     private EditText Schedule_edit;
-
 
     private TextView textView;
     private Spinner Spinner_1;
@@ -52,6 +51,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
     private String Aftertime;
     private String Savedate;
 
+    private LinearLayout linearLayout;
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         textView.setGravity(Gravity.CENTER);
         textView.setText(year + "년 " + month + "월 " + day + "일 ");
 
+        Title_edit = findViewById(R.id.memo_title);
+        Schedule_edit = findViewById(R.id.memo_contents);
 
         Spinner_1 = findViewById(R.id.Clack_Spinner_1);
         Spinner_1.setSelection(NowTime() - 1);
@@ -107,6 +110,18 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        /*
+        화면 클릭시 키보드 내려가게 하는 부분
+         */
+        linearLayout = findViewById(R.id.FullScreen);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
             }
         });
 
@@ -153,8 +168,6 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
     };
 
     public void save() {
-        Title_edit = findViewById(R.id.memo_title);
-        Schedule_edit = findViewById(R.id.memo_contents);
         int StartTime = Integer.parseInt(Previoustime.substring(0,2));
         int EndTime = Integer.parseInt(Aftertime.substring(0,2));
         Title = Title_edit.getText().toString();

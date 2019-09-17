@@ -8,9 +8,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,9 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
     private Button Id_duplicate;
 
     private boolean Id_Check = false;
+
+    private RelativeLayout relativeLayout;
+    private InputMethodManager imm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,20 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        /*
+        화면 클릭시 키보드 내려가게 하는 부분
+         */
+        relativeLayout = findViewById(R.id.FullScreen);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm.hideSoftInputFromWindow(user_id.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(user_name.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(user_password.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(user_password_confirm.getWindowToken(),0);
             }
         });
     }

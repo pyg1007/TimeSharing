@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +51,8 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
     private Spinner Spinner_1;
     private Spinner Spinner_2;
 
-
+    private LinearLayout linearLayout;
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,15 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
         Title_edit.setText(Title);
         Schedule_edit = findViewById(R.id.memo_contents);
         Schedule_edit.setText(Contents);
+
+        linearLayout = findViewById(R.id.FullScreen);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
+                imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(),0);
+            }
+        });
     }
 
     public int pretime(){

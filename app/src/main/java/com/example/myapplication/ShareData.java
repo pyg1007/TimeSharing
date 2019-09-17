@@ -15,7 +15,9 @@ public class ShareData {
     }
 
     public void addmember(String memberid){
-        Memeberid += "," + memberid;
+        if(!Memeberid.equals(memberid)){
+            Memeberid += "," + memberid;
+        }
     }
 
     public String getMemeberid() {
