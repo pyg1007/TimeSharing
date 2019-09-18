@@ -684,6 +684,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             intent.putExtra("id", userid);
             startActivity(intent);
             finish();
+
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(tablename);
         }
     }
 
