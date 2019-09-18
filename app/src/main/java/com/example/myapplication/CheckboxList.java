@@ -57,8 +57,10 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         flag = intent.getBooleanExtra("Invate_check",false);
         if (flag){
             members = intent.getStringArrayListExtra("memberid");
-            members_copy = intent.getStringArrayListExtra("memberid");
             Tablename = intent.getStringExtra("GroupName");
+            for (int i =0; i<members.size();i++){
+                members_copy.add(members.get(i));
+            }
         }else{
             members.add(userid);
         }

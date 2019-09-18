@@ -34,7 +34,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
     private String userid;
     private String Tablename;
-    private String memberid;
 
     private ListView listView;
     private UserListAdapter adapter;
@@ -81,7 +80,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
     public void makedialog(View view){
         final EditText et = new EditText(Memberlist.this);
-        TextView Idtext = view.findViewById(R.id.Id);
+        final TextView Idtext = view.findViewById(R.id.Id);
         Members.add(Idtext.getText().toString());
         AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
         ad.setTitle("그룹명")
@@ -103,7 +102,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(Memberlist.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
-                Members.remove(memberid);
+                Members.remove(Idtext.getText().toString());
             }
         });
         ad.show();
@@ -251,7 +250,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                     startActivity(intent);
                     finish();
                 }
-                Members.remove(memberid);
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -4,11 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,9 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -48,13 +45,12 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.sql.Array;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
+public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener, View.OnClickListener{
 
     private String tablename;
     private String userid;
@@ -75,6 +71,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
     private MaterialCalendarView materialCalendarView;
 
+    private FloatingActionButton fab;
     private Button Exit;
     private Button Invite;
 
@@ -173,6 +170,21 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         JoinSchedule joinSchedule = new JoinSchedule();
         joinSchedule.execute();
 
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.fab:
+                Intent intent = new Intent(Group.this, EmptyTime.class);
+                intent.putExtra("id", userid);
+                intent.putExtra("GroupName", tablename);
+                startActivity(intent);
+                finish();
+                break;
+        }
     }
 
     @Override
@@ -309,6 +321,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             ListView listView = findViewById(R.id.list);
             ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, members);
             listView.setAdapter(arrayAdapter);
+
+            FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
     }
 
@@ -547,11 +561,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            try{
-                Log.e("re : ", result);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 
@@ -601,7 +610,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
-                Log.e("Room :", result);
                 JSONObject jsonObject = new JSONObject(result);
 
                 JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
@@ -614,11 +622,9 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     tableexplanation = object.getString("tableexplanation");
                     count++;
                 }
-                Log.e("Roomcomment : ", tableexplanation);
 
                 Group_Explanation = view.findViewById(R.id.group_explanation);
                 if(tableexplanation.equals("null")){
-                    Log.e("TAG : ", "a");
                     Group_Explanation.setText(tablename + "방 입니다.");
                 }else{
                     Group_Explanation.setText(tableexplanation);
@@ -724,7 +730,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
-                Log.e("drop : " , result);
             } catch (Exception e) {
                 e.printStackTrace();
             }
