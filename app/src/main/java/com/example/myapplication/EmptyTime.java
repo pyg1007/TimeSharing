@@ -5,16 +5,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class EmptyTime extends AppCompatActivity implements View.OnClickListener{
 
@@ -22,6 +28,8 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
 
     private String Userid;
     private String Tablename;
+
+    private ArrayList<String> members;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +39,11 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         Userid = intent.getStringExtra("id");
         Tablename = intent.getStringExtra("GroupName");
+        members = intent.getStringArrayListExtra("memberlist");
+
+        for(int i =0;  i<members.size(); i++){
+            Log.e("Memberid :", members.get(i));
+        }
 
         button = findViewById(R.id.send);
         button.setOnClickListener(this);
@@ -103,5 +116,68 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
         }
+    }
+
+    public class AllmemberScheduleInsert extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+
+                String link = "http://pyg941007.dothome.co.kr/load_member.php";
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(Userid, "UTF-8");
+                data += "&" + URLEncoder.encode("contents", "UTF-8") + "=" + URLEncoder.encode(Userid, "UTF-8");
+                data += "&" + URLEncoder.encode("previoustime", "UTF-8") + "=" + URLEncoder.encode(Userid, "UTF-8");
+                data += "&" + URLEncoder.encode("aftertime", "UTF-8") + "=" + URLEncoder.encode(Userid, "UTF-8");
+                data += "&" + URLEncoder.encode("savedate", "UTF-8") + "=" + URLEncoder.encode(Userid, "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+
+                bufferedReader.close();
+                inputStream.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(EmptyTime.this, Group.class);
+        intent.putExtra("id", Userid);
+        intent.putExtra("GroupName", Tablename);
+        intent.putStringArrayListExtra("memberid", members);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

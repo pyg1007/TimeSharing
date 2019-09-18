@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener, View.OnClickListener{
+public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
 
     private String tablename;
     private String userid;
@@ -171,20 +172,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         joinSchedule.execute();
 
         fab = findViewById(R.id.fab);
-        fab.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.fab:
-                Intent intent = new Intent(Group.this, EmptyTime.class);
-                intent.putExtra("id", userid);
-                intent.putExtra("GroupName", tablename);
-                startActivity(intent);
-                finish();
-                break;
-        }
     }
 
     @Override
@@ -322,6 +309,17 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, members);
             listView.setAdapter(arrayAdapter);
 
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Group.this, EmptyTime.class);
+                    intent.putExtra("id", userid);
+                    intent.putExtra("GroupName", tablename);
+                    intent.putStringArrayListExtra("memberlist", members);
+                    startActivity(intent);
+                    finish();
+                }
+            });
             FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
     }
@@ -510,10 +508,22 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 }else{
                     new DropRoom().execute();
                 }
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Group.this, EmptyTime.class);
+                        intent.putExtra("id", userid);
+                        intent.putExtra("GroupName", tablename);
+                        intent.putStringArrayListExtra("memberlist", memberlist);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
     }
 
     public class UpdateRoomComment extends AsyncTask<String, Void, String>{
