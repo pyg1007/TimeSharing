@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -22,13 +23,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
+        Log.e("Token :" ,s);
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if(remoteMessage.getData() == null)
             return;
+        PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+        wakeLock.acquire(3000);
         sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"));
+        wakeLock.release();
     }
 
     private void sendNotification(String title, String content) {
@@ -71,7 +77,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // 아래 설정은 오레오부터 deprecated 되면서 NotificationChannel에서 동일 기능을 하는 메소드를 사용.
             builder.setContentTitle(title);
             builder.setSound(defaultSoundUri);
-            builder.setVibrate(new long[]{500, 500});
+            builder.setVibrate(new long[]{1, 100});
         }
 
         mManager.notify(0, builder.build());

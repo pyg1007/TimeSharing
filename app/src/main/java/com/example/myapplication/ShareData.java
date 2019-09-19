@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.util.Log;
+
 public class ShareData {
 
     private String Memeberid;
@@ -15,9 +17,13 @@ public class ShareData {
     }
 
     public void addmember(String memberid){
-        if(!Memeberid.equals(memberid)){
+        Log.e("before member : ", Memeberid);
+        Log.e("memberid : ", memberid);
+        Log.e("왜이럴까", String.valueOf(Memeberid.contains(memberid)));
+        if(!Memeberid.contains(memberid)){
             Memeberid += "," + memberid;
         }
+        Log.e("after member : ", Memeberid);
     }
 
     public String getMemeberid() {

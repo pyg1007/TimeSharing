@@ -69,6 +69,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private List<MyItem> myItems; // 전체 스케쥴 리스트
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
     private ArrayList<String> memberlist;
+    private List<ShareData> a;
 
     private MaterialCalendarView materialCalendarView;
 
@@ -84,6 +85,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         shareItem = new ShareItem();
+        a = new ArrayList<>();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -313,9 +315,19 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(Group.this, EmptyTime.class);
+                    CalendarDay c = materialCalendarView.getSelectedDate();
+                    int month = c.getMonth()+1;
+                    String zeromonth = null;
+                    if(month<10){
+                        zeromonth = "0"+month;
+                    }else{
+                        zeromonth = String.valueOf(month);
+                    }
+                    String dates = String.valueOf(c.getYear()) + zeromonth + c.getDay();
                     intent.putExtra("id", userid);
                     intent.putExtra("GroupName", tablename);
                     intent.putStringArrayListExtra("memberlist", members);
+                    intent.putExtra("Selectdates", dates);
                     startActivity(intent);
                     finish();
                 }
@@ -399,6 +411,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) { // 날자번경시 리스트보이게
                         shareItem.clear();
                         myItemList.clear();
+                        boolean checkingday = false;
                         int year = date.getYear();
                         int month = date.getMonth();
                         int day = date.getDay();
@@ -410,29 +423,38 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                             dates = String.valueOf(year) + String.valueOf(month + 1) + String.valueOf(day);
                         }
 
-                        for(int i=0; i<myItems.size(); i++){
-                            if(dates.equals(myItems.get(i).getSavedate())){
-                                shareItem.addmember(myItems.get(i));
+                        calendar.set(year,month,day);
+                        CalendarDay calendarDay = CalendarDay.from(calendar);
+                        for(int i=0; i<days.size(); i++){
+                            if(calendarDay.equals(days.get(i))){
+                                checkingday = true;
                             }
                         }
 
-                        AlertDialog.Builder ad = new AlertDialog.Builder(Group.this);
-                        LayoutInflater inflater = getLayoutInflater();
-                        View view = inflater.inflate(R.layout.dialoglist, null);
-                        ad.setView(view).setCancelable(false);
-
-                        final ListView listView = view.findViewById(R.id.dialog_list);
-                        DialogAdapter dialogAdapter = new DialogAdapter(shareItem.get_List());
-                        listView.setAdapter(dialogAdapter);
-
-                        ad.setTitle(dates + " "+ "공유일정");
-                        ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
+                        if(checkingday) {
+                            for (int i = 0; i < myItems.size(); i++) {
+                                if (dates.equals(myItems.get(i).getSavedate())) {
+                                    shareItem.addmember(myItems.get(i));
+                                }
                             }
-                        });
-                        ad.show();
+                            AlertDialog.Builder ad = new AlertDialog.Builder(Group.this);
+                            LayoutInflater inflater = getLayoutInflater();
+                            View view = inflater.inflate(R.layout.dialoglist, null);
+                            ad.setView(view).setCancelable(false);
+
+                            final ListView listView = view.findViewById(R.id.dialog_list);
+                            DialogAdapter dialogAdapter = new DialogAdapter(shareItem.get_List());
+                            listView.setAdapter(dialogAdapter);
+
+                            ad.setTitle(dates + " " + "공유일정");
+                            ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            ad.show();
+                        }
                     }
                 });
             } catch (Exception e) {
@@ -512,8 +534,19 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(Group.this, EmptyTime.class);
+                        CalendarDay c = materialCalendarView.getSelectedDate();
+                        int month = c.getMonth()+1;
+                        String zeromonth = null;
+                        if(month<10){
+                            zeromonth = "0"+month;
+                        }else{
+                            zeromonth = String.valueOf(month);
+                        }
+                        String dates = String.valueOf(c.getYear()) + zeromonth + c.getDay();
+                        Log.e("dates :", dates);
                         intent.putExtra("id", userid);
                         intent.putExtra("GroupName", tablename);
+                        intent.putExtra("Selectdates",dates);
                         intent.putStringArrayListExtra("memberlist", memberlist);
                         startActivity(intent);
                         finish();

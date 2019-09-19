@@ -28,6 +28,28 @@ public class ShareItem {
         return membercount[index];
     }
 
+    public String EmptyTimesum(){
+        String sum = "";
+        int startIndex = 0;
+        boolean isTime = true;
+        for(int i=0; i<24; i++){
+            if(getMembercount(i) == 0)
+                isTime = false;
+
+            if(getMembercount(i) != 0)
+            {
+                if(!isTime){
+                    sum += String.valueOf(startIndex + " ~ " + i + ",");
+                }
+                isTime = true;
+                startIndex = i+1;
+            }
+        }
+        if(!isTime)
+            sum += String.valueOf(startIndex + " ~ " + 24);
+        return sum;
+    }
+
     public String getStartTime(int index){
         String startTime = "";
         if(index<10){
