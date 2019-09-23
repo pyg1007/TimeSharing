@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -125,10 +126,24 @@ public class AllScheduleInsert extends AppCompatActivity implements View.OnClick
                 finish();
                 break;
             case R.id.memo_insert_button:
-                for (int i = 0 ; i<members.size(); i++){
-                    new AllmemberScheduleInsert().execute(members.get(i),TitleEdit.getText().toString(),ContentsEdit.getText().toString());
+                String[] setStart = setting_Start.split(" ");
+                String[] setEnd = setting_End.split(" ");
+                int set_Start = Integer.parseInt(setStart[0]);
+                int set_End = Integer.parseInt(setEnd[0]);
+                if (TitleEdit.getText().toString().equals("")){
+                    Toast.makeText(this, "제목을 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
-                sendPostFCM();
+                else if (ContentsEdit.getText().toString().equals("")){
+                    Toast.makeText(this, "내용을 입력하세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if (set_Start>set_End){
+                    Toast.makeText(this, "시작시간이 마지막시간보다 더 큽니다.", Toast.LENGTH_SHORT).show();
+                }else {
+                    for (int i = 0; i < members.size(); i++) {
+                        new AllmemberScheduleInsert().execute(members.get(i), TitleEdit.getText().toString(), ContentsEdit.getText().toString());
+                    }
+                    sendPostFCM();
+                }
                 break;
         }
     }
