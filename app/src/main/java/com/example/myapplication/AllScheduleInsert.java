@@ -229,7 +229,7 @@ public class AllScheduleInsert extends AppCompatActivity implements View.OnClick
 
                 JSONObject info = new JSONObject();
                 info.put("title" , TableName + "에서 온 메세지");
-                info.put("body", ""+Userid + "님이"+setting_Start + " ~ " + setting_End + "시간에" + MenuName + "으로 등록하셨습니다.");
+                info.put("body", ""+Userid + "님이"+setting_Start + " ~ " + setting_End + "시간에 " + TitleEdit.getText().toString() + "으로 등록하셨습니다.");
 
                 JSONObject json = new JSONObject();
                 json.put("to", "/topics/" + TableName);

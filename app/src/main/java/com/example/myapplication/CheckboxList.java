@@ -106,7 +106,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                                         Tablename = et.getText().toString().trim();
                                         dialogInterface.dismiss();
                                         for (int count = 0; count < members.size(); count++) {
-                                            Log.e("인서트왜됨? : ", "왜되냐고 !!!");
                                             new Insertdata().execute(members.get(count));
                                         }
                                         new Tablecreate().execute();
