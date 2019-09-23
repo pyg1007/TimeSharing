@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -112,6 +113,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         /*
         화면 클릭시 키보드 내려가게 하는 부분
          */
+        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         relativeLayout = findViewById(R.id.FullScreen);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -172,6 +172,11 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             textView.setText(year + "년 " + (month+1) + "월 " + day + "일 ");
+            String Month = null;
+            if(month < 9){
+                Month = "0" + (month+1);
+            }
+            Savedate = ""+ year + Month + day;
         }
     };
 

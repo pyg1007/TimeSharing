@@ -143,6 +143,12 @@ public class AllScheduleInsert extends AppCompatActivity implements View.OnClick
                         new AllmemberScheduleInsert().execute(members.get(i), TitleEdit.getText().toString(), ContentsEdit.getText().toString());
                     }
                     sendPostFCM();
+                    Intent group = new Intent(AllScheduleInsert.this, Group.class);
+                    group.putStringArrayListExtra("memberid", members);
+                    group.putExtra("id", Userid);
+                    group.putExtra("GroupName", TableName);
+                    startActivity(group);
+                    finish();
                 }
                 break;
         }
