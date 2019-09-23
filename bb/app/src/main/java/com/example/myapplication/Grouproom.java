@@ -103,7 +103,6 @@ public class Grouproom extends AppCompatActivity {
                     count++;
                 }
 
-                Log.e("TAG :", String.valueOf(tablelist.size()));
                 ListView listView = findViewById(R.id.listView);
                 ArrayAdapter arrayAdapter = new ArrayAdapter(Grouproom.this, android.R.layout.simple_list_item_1, tablelist);
                 listView.setAdapter(arrayAdapter);

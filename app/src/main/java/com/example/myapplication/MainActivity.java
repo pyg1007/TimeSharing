@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -71,9 +70,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(ID.getWindowToken(),0);
-                imm.hideSoftInputFromWindow(PW.getWindowToken(),0);
+                try{
+                    imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(ID.getWindowToken(),0);
+                    imm.hideSoftInputFromWindow(PW.getWindowToken(),0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }

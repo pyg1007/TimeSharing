@@ -45,6 +45,8 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Schedule extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, OnMonthChangedListener{
@@ -417,6 +419,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 showitem.add(new MyItem(myItems.get(i).getIndex(), myItems.get(i).getUserid(), myItems.get(i).getTitle(), myItems.get(i).getContents(), myItems.get(i).getPrevioustime(), myItems.get(i).getAftertime(), myItems.get(i).getSavedate()));
                             }
                         }
+                        Collections.sort(showitem, myItemComparator);
                         myAdapter.notifyDataSetChanged();
                         schedule_list();
                     }
@@ -439,6 +442,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         showitem.add(new MyItem(myItems.get(i).getIndex(), myItems.get(i).getUserid(), myItems.get(i).getTitle(), myItems.get(i).getContents(), myItems.get(i).getPrevioustime(), myItems.get(i).getAftertime(), myItems.get(i).getSavedate()));
                     }
                 }
+                Collections.sort(showitem, myItemComparator);
                 myAdapter.notifyDataSetChanged();
                 schedule_list();
 
@@ -447,6 +451,15 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             }
         }
     }
+
+
+    //리스트 소트
+    Comparator<MyItem> myItemComparator = new Comparator<MyItem>() {
+        @Override
+        public int compare(MyItem myItem, MyItem t1) {
+            return myItem.getPrevioustime().compareTo(t1.getPrevioustime());
+        }
+    };
 
     public class DeleteSchedule extends AsyncTask<String, Void, String>{
 

@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -95,12 +96,17 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
         Schedule_edit = findViewById(R.id.memo_contents);
         Schedule_edit.setText(Contents);
 
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         linearLayout = findViewById(R.id.FullScreen);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
-                imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(),0);
+                try{
+                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
+                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(),0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }

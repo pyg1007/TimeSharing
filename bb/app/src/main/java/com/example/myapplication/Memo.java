@@ -175,7 +175,6 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-                Log.e(" Error : ", s);
             }
 
             @Override

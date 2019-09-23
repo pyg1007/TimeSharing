@@ -49,6 +49,8 @@ import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
@@ -69,7 +71,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private List<MyItem> myItems; // 전체 스케쥴 리스트
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
     private ArrayList<String> memberlist;
-    private List<ShareData> a;
 
     private MaterialCalendarView materialCalendarView;
 
@@ -85,7 +86,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
         shareItem = new ShareItem();
-        a = new ArrayList<>();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -175,6 +175,13 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         fab = findViewById(R.id.fab);
     }
+
+    Comparator<String> comAsc = new Comparator<String>() {
+        @Override
+        public int compare(String s, String t1) {
+            return s.compareTo(t1);
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -308,6 +315,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             ListView listView = findViewById(R.id.list);
+            Collections.sort(members, comAsc);
             ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, members);
             listView.setAdapter(arrayAdapter);
 
@@ -442,7 +450,10 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                             View view = inflater.inflate(R.layout.dialoglist, null);
                             ad.setView(view).setCancelable(false);
 
+
+
                             final ListView listView = view.findViewById(R.id.dialog_list);
+                            Collections.sort(shareItem.get_List(),shareDataComparator);
                             DialogAdapter dialogAdapter = new DialogAdapter(shareItem.get_List());
                             listView.setAdapter(dialogAdapter);
 
@@ -462,6 +473,16 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             }
         }
     }
+
+    /*
+    리스트 정렬
+     */
+    Comparator<ShareData> shareDataComparator = new Comparator<ShareData>() {
+        @Override
+        public int compare(ShareData shareData, ShareData t1) {
+            return shareData.getStartTime().compareTo(t1.getStartTime());
+        }
+    };
 
     public class LookupMemeber extends AsyncTask<Void, Void, String>{
 
@@ -525,6 +546,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 }
                 if(memberlist.size()>0) {
                     ListView listView = findViewById(R.id.list);
+                    Collections.sort(memberlist, comAsc);
                     ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, memberlist);
                     listView.setAdapter(arrayAdapter);
                 }else{

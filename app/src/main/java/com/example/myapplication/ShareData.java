@@ -11,19 +11,23 @@ public class ShareData {
 
     public ShareData(MyItem myItem, int time){
         this.Memeberid = myItem.getUserid();
-        this.StartTime = String.valueOf(time) + " : 00";
-        this.EndTime = String.valueOf(time+1) + " : 00";
+        int end = time+1;
+        if(time<10) {
+            this.StartTime = "0" + String.valueOf(time) + " : 00";
+        }if(end<10) {
+            this.EndTime = "0" + String.valueOf(end) + " : 00";
+        }if(time>=10) {
+            this.StartTime = String.valueOf(time) + " : 00";
+        }if(end>=10) {
+            this.EndTime = String.valueOf(time + 1) + " : 00";
+        }
         this.SaveDate = myItem.getSavedate();
     }
 
     public void addmember(String memberid){
-        Log.e("before member : ", Memeberid);
-        Log.e("memberid : ", memberid);
-        Log.e("왜이럴까", String.valueOf(Memeberid.contains(memberid)));
         if(!Memeberid.contains(memberid)){
             Memeberid += "," + memberid;
         }
-        Log.e("after member : ", Memeberid);
     }
 
     public String getMemeberid() {

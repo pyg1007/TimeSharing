@@ -1,12 +1,14 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -116,12 +118,17 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         /*
         화면 클릭시 키보드 내려가게 하는 부분
          */
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         linearLayout = findViewById(R.id.FullScreen);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
-                imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
+                try {
+                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 

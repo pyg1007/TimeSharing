@@ -3,6 +3,8 @@ package com.example.myapplication;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ShareItem {
@@ -28,11 +30,11 @@ public class ShareItem {
         return membercount[index];
     }
 
-    public String EmptyTimesum(){
+    public String EmptyTimesum(int start, int end){
         String sum = "";
-        int startIndex = 0;
+        int startIndex = start;
         boolean isTime = true;
-        for(int i=0; i<24; i++){
+        for(int i=start; i<end; i++){
             if(getMembercount(i) == 0)
                 isTime = false;
 
@@ -46,7 +48,7 @@ public class ShareItem {
             }
         }
         if(!isTime)
-            sum += String.valueOf(startIndex + " ~ " + 24);
+            sum += String.valueOf(startIndex + " ~ " + end);
         return sum;
     }
 
@@ -82,7 +84,6 @@ public class ShareItem {
     public void addmember(MyItem myItem){
         int startTime = Integer.parseInt(myItem.getPrevioustime().substring(0,2));
         int endTime = Integer.parseInt(myItem.getAftertime().substring(0,2));
-        Log.e("myItem : ", String.valueOf(myItem));
         for(int i = startTime; i<endTime; i++) {
             member[i] += myItem.getUserid();
             membercount[i] ++;
@@ -96,7 +97,12 @@ public class ShareItem {
     }
 
     public ShareData check(int Nowtime){
-        String time = Nowtime + " : 00";
+        String time;
+        if(Nowtime<10)
+            time = "0" + Nowtime + " : 00";
+        else{
+            time = Nowtime + " : 00";
+        }
         for(int i=0; i<shareDataList.size(); i++){
             if(time.equals(shareDataList.get(i).getStartTime())){
                 return shareDataList.get(i);

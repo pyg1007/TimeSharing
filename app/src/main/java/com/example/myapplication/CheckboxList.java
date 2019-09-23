@@ -227,7 +227,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String link = "http://pyg941007.dothome.co.kr/aa.php";
+                String link = "http://pyg941007.dothome.co.kr/Insert_room(person).php";
 
 
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
