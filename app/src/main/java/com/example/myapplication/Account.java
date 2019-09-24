@@ -137,6 +137,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
                     updateuser _update = new updateuser();
                     _update.execute();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Toast.makeText(this, "비밀번호 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
                 }

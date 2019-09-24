@@ -88,7 +88,7 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         Schedule_edit = findViewById(R.id.memo_contents);
 
         Spinner_1 = findViewById(R.id.Clack_Spinner_1);
-        Spinner_1.setSelection(NowTime() - 1);
+        Spinner_1.setSelection(NowTime());
         Spinner_1.setGravity(Gravity.CENTER);
         Spinner_1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -102,7 +102,7 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             }
         });
         Spinner_2 = findViewById(R.id.Clack_Spinner_2);
-        Spinner_2.setSelection(NowTime());
+        Spinner_2.setSelection(NowTime()+1);
         Spinner_2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

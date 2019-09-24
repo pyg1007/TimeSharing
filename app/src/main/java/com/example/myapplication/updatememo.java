@@ -118,9 +118,16 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
         return time;
     }
 
+    public int afttime(){
+        int time;
+        String[] aftertime = Aftertime.split(" ");
+        time = Integer.parseInt(aftertime[0]);
+        return time;
+    }
+
     public void Spinner(){
         Spinner_1 = findViewById(R.id.Clack_Spinner_1);
-        Spinner_1.setSelection(pretime() - 1 );
+        Spinner_1.setSelection(pretime());
         Spinner_1.setGravity(Gravity.CENTER);
         Spinner_1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -134,7 +141,8 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
             }
         });
         Spinner_2 = findViewById(R.id.Clack_Spinner_2);
-        Spinner_2.setSelection(pretime());
+        Spinner_2.setSelection(afttime()
+        );
         Spinner_2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

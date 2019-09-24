@@ -264,18 +264,39 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     public void schedule_list(){
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), updatememo.class);
-                intent.putExtra("index", showitem.get(i).getIndex());
-                intent.putExtra("title",showitem.get(i).getTitle());
-                intent.putExtra("id", userid);
-                intent.putExtra("content", showitem.get(i).getContents());
-                intent.putExtra("previoustime", showitem.get(i).getPrevioustime());
-                intent.putExtra("aftertime", showitem.get(i).getAftertime());
-                intent.putExtra("savedate", showitem.get(i).getSavedate());
-                myAdapter.notifyDataSetChanged();
-                startActivity(intent);
-                finish();
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                View DialogView = getLayoutInflater().inflate(R.layout.schedule_dialog, null);
+                TextView TitleText = DialogView.findViewById(R.id.Title);
+                TextView TimeText = DialogView.findViewById(R.id.Time);
+                TextView ContentsText = DialogView.findViewById(R.id.Memo_contents);
+                TitleText.setText(showitem.get(i).getTitle());
+                TimeText.setText(showitem.get(i).getPrevioustime() +" ~ "+ showitem.get(i).getAftertime());
+                ContentsText.setText(showitem.get(i).getContents());
+                AlertDialog.Builder ad = new AlertDialog.Builder(Schedule.this);
+                ad.setView(DialogView);
+                ad.setPositiveButton("편집", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getApplicationContext(), updatememo.class);
+                        intent.putExtra("index", showitem.get(i).getIndex());
+                        intent.putExtra("title",showitem.get(i).getTitle());
+                        intent.putExtra("id", userid);
+                        intent.putExtra("content", showitem.get(i).getContents());
+                        intent.putExtra("previoustime", showitem.get(i).getPrevioustime());
+                        intent.putExtra("aftertime", showitem.get(i).getAftertime());
+                        intent.putExtra("savedate", showitem.get(i).getSavedate());
+                        myAdapter.notifyDataSetChanged();
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
             }
         });
 

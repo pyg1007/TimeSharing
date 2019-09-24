@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -80,6 +81,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
     public void makedialog(View view){
         final EditText et = new EditText(Memberlist.this);
+        et.setHint("영어로만 가능합니다. 숫자와 특수문자는 자동제거됩니다.");
         final TextView Idtext = view.findViewById(R.id.Id);
         Members.add(Idtext.getText().toString());
         AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
@@ -90,12 +92,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 .setPositiveButton("생성", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Tablename = et.getText().toString().trim();
-                        dialogInterface.dismiss();
-                        for (int count = 0; count<Members.size(); count++) {
-                            new Insertdata().execute(Members.get(count));
-                        }
-                        new Tablecreate().execute();
+
                     }
                 });
         ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -105,7 +102,24 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 Members.remove(Idtext.getText().toString());
             }
         });
-        ad.show();
+        final AlertDialog dialog = ad.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Tablename = et.getText().toString().trim();
+                Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
+                if(Tablename.getBytes().length == Tablename.length()){
+                    for (int count = 0; count<Members.size(); count++) {
+                        new Insertdata().execute(Members.get(count));
+                    }
+                    new Tablecreate().execute();
+                    dialog.dismiss();
+                }else if(Tablename.getBytes().length == 3 * Tablename.length()){
+                    Toast.makeText(Memberlist.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public class BackgroundTask extends AsyncTask<Void, Void, String> {
