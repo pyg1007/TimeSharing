@@ -97,7 +97,6 @@
             android:layout_below="@+id/PW_check_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/NICKNAME_textview"
-            android:imeOptions="actionDone"
             android:maxLength="10"
             android:singleLine="true" />
 

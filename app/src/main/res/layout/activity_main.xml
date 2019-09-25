@@ -71,7 +71,6 @@
             android:layout_below="@+id/ID_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/PW_textview"
-            android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:singleLine="true" />
 
