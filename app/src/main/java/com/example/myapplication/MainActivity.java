@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -62,6 +63,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ID = findViewById(R.id.ID_Text);
         PW = findViewById(R.id.PW_Text);
+
+        /*확인좀!
+        PW.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if(event.getAction()==KeyEvent.ACTION_DOWN)
+                {
+                    onClick(login(););
+                }
+            }
+        });*/
 
         /*
         화면 클릭시 키보드 내려가게 하는 부분
@@ -180,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Login_task login_task = new Login_task();
         login_task.execute();
     }
-
 
 
 

@@ -51,8 +51,8 @@
             android:id="@+id/Pw_realtime_chk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/PW_check_Text"
-            android:layout_below="@id/PW_check_textview"/>
+            android:layout_below="@id/PW_check_textview"
+            android:layout_toRightOf="@id/PW_check_Text" />
 
 
         <EditText
@@ -60,7 +60,10 @@
             android:layout_width="213dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:layout_toRightOf="@+id/ID_textview" />
+            android:layout_toRightOf="@+id/ID_textview"
+            android:imeOptions="actionNext"
+            android:maxLength="20"
+            android:singleLine="true" />
 
 
         <EditText
@@ -70,7 +73,10 @@
             android:layout_below="@+id/ID_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/PW_textview"
-            android:inputType="textPassword" />
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:singleLine="true" />
 
 
         <EditText
@@ -80,7 +86,9 @@
             android:layout_below="@+id/PW_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/PW_textview"
-            android:inputType="textPassword" />
+            android:imeOptions="actionNext"
+            android:inputType="textPassword"
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/nickname_Text"
@@ -88,7 +96,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/PW_check_Text"
             android:layout_alignLeft="@+id/ID_Text"
-            android:layout_toRightOf="@+id/NICKNAME_textview" />
+            android:layout_toRightOf="@+id/NICKNAME_textview"
+            android:imeOptions="actionDone"
+            android:maxLength="10"
+            android:singleLine="true" />
 
 
         <Button
@@ -121,8 +132,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/PW_check_Text"
-            android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/PW_check_Text"
             android:scaleType="fitStart" />
 
