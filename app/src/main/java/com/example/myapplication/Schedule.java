@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -26,6 +27,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Loading.LodingProgress;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -351,6 +353,11 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     public class scheduleTask extends AsyncTask<Void, Void, String> {
+        LodingProgress lodingProgress = new LodingProgress(Schedule.this);
+        @Override
+        protected void onPreExecute() {
+            lodingProgress.loading();
+        }
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -466,7 +473,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 Collections.sort(showitem, myItemComparator);
                 myAdapter.notifyDataSetChanged();
                 schedule_list();
-
+                lodingProgress.loadingEnd();
             } catch (Exception e) {
                 e.printStackTrace();
             }

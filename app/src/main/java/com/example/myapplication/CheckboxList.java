@@ -103,12 +103,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                                 .setPositiveButton("생성", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        Tablename = et.getText().toString().trim();
-                                        dialogInterface.dismiss();
-                                        for (int count = 0; count < members.size(); count++) {
-                                            new Insertdata().execute(members.get(count));
-                                        }
-                                        new Tablecreate().execute();
+
                                     }
                                 });
                         ad.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -118,9 +113,28 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                             }
                         });
                         ad.show();
+                        final AlertDialog dialog = ad.create();
+                        dialog.show();
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Tablename = et.getText().toString().trim();
+                                Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
+                                if(Tablename.getBytes().length == Tablename.length()){
+                                    for (int count = 0; count < members.size(); count++) {
+                                        new Insertdata().execute(members.get(count));
+                                    }
+                                    new Tablecreate().execute();
+                                    dialog.dismiss();
+                                }else if(Tablename.getBytes().length == 3 * Tablename.length()){
+                                    Toast.makeText(CheckboxList.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }else{
                         Toast.makeText(this, "초대할 사람을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     }
+
                 }
                 break;
         }

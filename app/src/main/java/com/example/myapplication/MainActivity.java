@@ -64,16 +64,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ID = findViewById(R.id.ID_Text);
         PW = findViewById(R.id.PW_Text);
 
-        /*확인좀!
+        ID.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && keyCode == KeyEvent.KEYCODE_ENTER){
+                    PW.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         PW.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN)
+                if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
                 {
-                    onClick(login(););
+                    LogIn.performClick();
+                    return true;
                 }
+                return false;
             }
-        });*/
+        });
 
         /*
         화면 클릭시 키보드 내려가게 하는 부분

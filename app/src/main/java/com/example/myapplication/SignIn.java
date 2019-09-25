@@ -10,6 +10,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -68,6 +69,56 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         user_password_confirm = findViewById(R.id.PW_check_Text);
         user_name = findViewById(R.id.nickname_Text);
 
+        user_id.setFilters(new InputFilter[]{idFilter});
+        user_id.setHint("영어와 숫자만 사용가능합니다.");
+
+        user_password.setHint("8자리 이상을 입력해주세요.");
+
+        /// 엔터키 누를 시 작동 부분 ///
+        user_id.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    user_password.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        user_password.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    user_password_confirm.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        user_password_confirm.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    user_name.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        user_name.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    Sign_in.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
         user_password_confirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -122,6 +173,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(this, "아이디를 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else if (string_user_password.equals("")) {
                     Toast.makeText(this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                } else if(string_user_password.length() < 8){
+                    Toast.makeText(this, "비밀번호 길이를 체크해주세요.", Toast.LENGTH_SHORT).show();
                 } else if (string_user_name.equals("")) {
                     Toast.makeText(this, "이름을 입력해주세요", Toast.LENGTH_SHORT).show();
                 } else if (!string_user_password.equals(string_user_password_check)) {
@@ -159,16 +212,13 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
     InputFilter idFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[0-9a-z]+$")) {
+            if (source.toString().matches("^[0-9a-zA-Z]+$")) {
                 return source;
             } else {
                 return "";
             }
         }
     };
-
-    InputFilter[] filters = new InputFilter[]{idFilter};
-    /*확인좀!user_id.setFilters(filters);*/
 
     public class InsertData extends AsyncTask<String, Void, String> {
         @Override

@@ -142,17 +142,19 @@ public class EmptyTimeDate extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Intent intent = new Intent(EmptyTimeDate.this, AllScheduleInsert.class);
-                        intent.putExtra("Time", SplitTime[i]);
-                        intent.putExtra("id",Userid);
-                        intent.putStringArrayListExtra("memberlist",members);
-                        intent.putExtra("GroupName",Tablename);
-                        intent.putExtra("Selectdates", Dates);
-                        intent.putExtra("Menu",MenuName);
-                        intent.putExtra("Starttime", Starttime);
-                        intent.putExtra("Endtime", Endtime);
-                        startActivity(intent);
-                        finish();
+                        if(!SplitTime[i].equals("")) {
+                            Intent intent = new Intent(EmptyTimeDate.this, AllScheduleInsert.class);
+                            intent.putExtra("Time", SplitTime[i]);
+                            intent.putExtra("id", Userid);
+                            intent.putStringArrayListExtra("memberlist", members);
+                            intent.putExtra("GroupName", Tablename);
+                            intent.putExtra("Selectdates", Dates);
+                            intent.putExtra("Menu", MenuName);
+                            intent.putExtra("Starttime", Starttime);
+                            intent.putExtra("Endtime", Endtime);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 });
             } catch (Exception e) {

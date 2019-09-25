@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.Loading.LodingProgress;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -346,6 +347,12 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
     public class JoinSchedule extends AsyncTask<Void, Void, String>{
 
+        LodingProgress lodingProgress = new LodingProgress(Group.this);
+        @Override
+        protected void onPreExecute() {
+            lodingProgress.loading();
+        }
+
         @Override
         protected String doInBackground(Void... voids) {
             try {
@@ -471,6 +478,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            lodingProgress.loadingEnd();
         }
     }
 
