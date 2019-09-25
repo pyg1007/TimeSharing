@@ -29,7 +29,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.CalendarDecorator.EventDecorator;
+import com.example.myapplication.CalendarDecorator.OneDayDecorator;
+import com.example.myapplication.CalendarDecorator.SaturdayDecorator;
+import com.example.myapplication.CalendarDecorator.SundayDecorator;
+import com.example.myapplication.CustomAdapter.DialogAdapter;
 import com.example.myapplication.Loading.LodingProgress;
+import com.example.myapplication.CustomAdapterItem.MyItem;
+import com.example.myapplication.CustomAdapterItem.ShareData;
+import com.example.myapplication.CustomAdapterItem.ShareItem;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -54,7 +62,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener{
+public class Group extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMonthChangedListener, View.OnClickListener{
 
     private String tablename;
     private String userid;
@@ -86,11 +94,14 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
-        shareItem = new ShareItem();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar();
+        GetData();
+        Calandar_init();
+        UI();
+    }
+
+    public void GetData(){
+        shareItem = new ShareItem();
 
         myItems = new ArrayList<>();
         myItemList = new ArrayList<>();
@@ -106,8 +117,14 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         }else{
             addmember();
         }
+        new LookupRoomComment().execute();
+        new JoinSchedule().execute();
+    }
 
-        Calandar_init();
+    public void UI(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -118,35 +135,11 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         navigationView.setNavigationItemSelectedListener(this);
 
         view = navigationView.getHeaderView(0);
-        new LookupRoomComment().execute();
 
         Exit = findViewById(R.id.exit);
         Invite = findViewById(R.id.Invite_list);
-        Exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ExitRoom().execute();
-            }
-        });
-
-        Invite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Group.this, CheckboxList.class);
-                Invite_check = true;
-                intent.putExtra("GroupName", tablename);
-                intent.putExtra("id", userid);
-                intent.putExtra("Invate_check", Invite_check);
-                if(members == null){
-                    intent.putStringArrayListExtra("memberid", memberlist);
-                }else{
-                    intent.putStringArrayListExtra("memberid", members);
-                }
-                startActivity(intent);
-                finish();
-            }
-        });
-
+        Exit.setOnClickListener(this);
+        Invite.setOnClickListener(this);
         Group_Explanation = view.findViewById(R.id.group_explanation);
         Group_Explanation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,10 +163,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 ad.show();
             }
         });
-
-        JoinSchedule joinSchedule = new JoinSchedule();
-        joinSchedule.execute();
-
         fab = findViewById(R.id.fab);
     }
 
@@ -183,6 +172,29 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             return s.compareTo(t1);
         }
     };
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.Invite_list:
+                Intent intent = new Intent(Group.this, CheckboxList.class);
+                Invite_check = true;
+                intent.putExtra("GroupName", tablename);
+                intent.putExtra("id", userid);
+                intent.putExtra("Invate_check", Invite_check);
+                if(members == null){
+                    intent.putStringArrayListExtra("memberid", memberlist);
+                }else{
+                    intent.putStringArrayListExtra("memberid", members);
+                }
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.exit:
+                new ExitRoom().execute();
+                break;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -213,7 +225,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 //        }
             switch (item.getItemId()) {
                 case R.id.back_icon:
-                    Intent intent = new Intent(Group.this, Grouproom.class);
+                    Intent intent = new Intent(Group.this, GroupList.class);
                     intent.putExtra("id", userid);
                     startActivity(intent);
                     finish();
@@ -753,7 +765,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             new LookupMemeber().execute();
-            Intent intent = new Intent(Group.this, Grouproom.class);
+            Intent intent = new Intent(Group.this, GroupList.class);
             intent.putExtra("id", userid);
             startActivity(intent);
             finish();
@@ -817,7 +829,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }else {
-            Intent intent = new Intent(getApplicationContext(), Grouproom.class);
+            Intent intent = new Intent(getApplicationContext(), GroupList.class);
             intent.putExtra("id", userid);
             startActivity(intent);
             super.onBackPressed();

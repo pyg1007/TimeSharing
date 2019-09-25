@@ -1,6 +1,6 @@
-package com.example.myapplication;
+package com.example.myapplication.CustomAdapterItem;
 
-import android.util.Log;
+import com.example.myapplication.CustomAdapterItem.MyItem;
 
 public class ShareData {
 

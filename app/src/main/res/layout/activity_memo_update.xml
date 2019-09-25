@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".updatememo">
+    tools:context=".MemoUpdate">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,6 +45,7 @@
             android:id="@+id/memo_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:inputType="text"
             android:hint="제목" />
     </LinearLayout>
 
@@ -112,6 +113,7 @@
             android:id="@+id/memo_contents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:hint="메모" />
     </LinearLayout>
 

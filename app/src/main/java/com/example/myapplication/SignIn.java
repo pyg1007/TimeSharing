@@ -9,9 +9,9 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,16 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.regex.Pattern;
 
 public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,6 +51,13 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        UI();
+        HideKeyboard();
+        RealTimePWCheck();
+        EnterKey();
+    }
+
+    public void UI(){
         Sign_in = findViewById(R.id.add_account_confirm);
         Cancle = findViewById(R.id.add_account_cancel);
         Id_duplicate = findViewById(R.id.ID_confirm_btn);
@@ -71,54 +74,25 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
         user_id.setFilters(new InputFilter[]{idFilter});
         user_id.setHint("영어와 숫자만 사용가능합니다.");
-
         user_password.setHint("8자리 이상을 입력해주세요.");
+        user_password_confirm.setHint("8자리 이상을 입력해주세요.");
+    }
 
-        /// 엔터키 누를 시 작동 부분 ///
-        user_id.setOnKeyListener(new View.OnKeyListener() {
+    public void EnterKey(){
+        user_name.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        user_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-                    user_password.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        user_password.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-                    user_password_confirm.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        user_password_confirm.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-                    user_name.requestFocus();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        user_name.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyEvent.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+            public boolean onEditorAction(TextView textView, int keyCode, KeyEvent keyEvent) {
+                if(keyCode == EditorInfo.IME_ACTION_DONE){
                     Sign_in.performClick();
                     return true;
                 }
                 return false;
             }
         });
+    }
 
+    public void RealTimePWCheck(){
         user_password_confirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -139,27 +113,28 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
+    }
 
-        /*
+    /*
         화면 클릭시 키보드 내려가게 하는 부분
          */
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    public void HideKeyboard(){
         relativeLayout = findViewById(R.id.FullScreen);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                try{
+                    imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(user_id.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(user_name.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(user_password.getWindowToken(), 0);
                     imm.hideSoftInputFromWindow(user_password_confirm.getWindowToken(), 0);
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         });
     }
-
 
     @Override
     public void onClick(View v) {
@@ -187,12 +162,12 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                     Toast.makeText(this, "비밀번호는 8글자 이상 입력해야합니다.", Toast.LENGTH_SHORT).show();
                 }else {
                     new InsertData().execute(string_user_id, string_user_password, string_user_name);
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), LogIn.class));
                     finish();
                 }
                 break;
             case R.id.add_account_cancel:
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), LogIn.class));
                 finish();
                 break;
             case R.id.ID_confirm_btn:
@@ -208,7 +183,9 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-
+    /*
+    영어 숫자만 사용가능하게 제한 걸기
+     */
     InputFilter idFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
@@ -318,7 +295,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(SignIn.this, MainActivity.class));
+        startActivity(new Intent(SignIn.this, LogIn.class));
         super.onBackPressed();
     }
 }

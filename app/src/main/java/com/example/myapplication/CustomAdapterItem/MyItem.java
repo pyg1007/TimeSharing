@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.CustomAdapterItem;
 
 public class MyItem {
     private int index;

@@ -37,6 +37,30 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_insert_menu);
 
+        GetData();
+        UI();
+    }
+
+    public void GetData(){
+        // 데이터 전달받음
+        Intent intent = getIntent();
+        Userid = intent.getStringExtra("id");
+        TableName = intent.getStringExtra("GroupName");
+        members = intent.getStringArrayListExtra("memberlist");
+        Dates = intent.getStringExtra("Selectdates");
+    }
+
+    public void UI(){
+        Title = findViewById(R.id.MenuNameEdit);
+        Add = findViewById(R.id.Add);
+        Cancel = findViewById(R.id.Cancle);
+        Add.setOnClickListener(this);
+        Cancel.setOnClickListener(this);
+
+        Spinner();
+    }
+
+    public void Spinner(){
         FirstTime = findViewById(R.id.Clack_Spinner_1);
         EndTime = findViewById(R.id.Clack_Spinner_2);
 
@@ -65,21 +89,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
 
             }
         });
-
-        Title = findViewById(R.id.MenuNameEdit);
-        Add = findViewById(R.id.Add);
-        Cancel = findViewById(R.id.Cancle);
-        Add.setOnClickListener(this);
-        Cancel.setOnClickListener(this);
-
-
-
-        // 데이터 전달받음
-        Intent intent = getIntent();
-        Userid = intent.getStringExtra("id");
-        TableName = intent.getStringExtra("GroupName");
-        members = intent.getStringArrayListExtra("memberlist");
-        Dates = intent.getStringExtra("Selectdates");
     }
 
     @Override
@@ -161,7 +170,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try{
-                Log.e("TAG : ", s);
                 if (s.equals("fail")){
                     Toast.makeText(EmptyInsertMenu.this, "이미 같은 카테고리가 존재합니다.", Toast.LENGTH_SHORT).show();
                 }else{

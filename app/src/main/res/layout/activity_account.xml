@@ -12,18 +12,14 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="200dp">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/Layout">
 
         <TextView
             android:id="@+id/Id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-60dp"
-            android:gravity="center_horizontal"
-            android:textSize="16dp"
-            android:visibility="visible" />
+            android:textSize="16dp" />
 
     </RelativeLayout>
 
@@ -99,6 +95,7 @@
             android:layout_below="@+id/account_memo"
             android:layout_alignLeft="@+id/pw"
             android:layout_marginTop="-30dp"
+            android:inputType="text"
             android:background="@android:drawable/editbox_background"
             android:layout_toRightOf="@+id/account_memo"/>
 

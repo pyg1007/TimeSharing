@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,7 +26,13 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.CalendarDecorator.EventDecorator;
+import com.example.myapplication.CalendarDecorator.OneDayDecorator;
+import com.example.myapplication.CalendarDecorator.SaturdayDecorator;
+import com.example.myapplication.CalendarDecorator.SundayDecorator;
 import com.example.myapplication.Loading.LodingProgress;
+import com.example.myapplication.CustomAdapter.MyAdapter;
+import com.example.myapplication.CustomAdapterItem.MyItem;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -83,18 +88,24 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        mListView = findViewById(R.id.schedule_list);
+        GetData();
+        UI();
+        Calendar_init();
+    }
+
+    public void GetData(){
         myItems = new ArrayList<MyItem>();
         showitem = new ArrayList<MyItem>();
-        myAdapter = new MyAdapter(showitem);
-        mListView.setAdapter(myAdapter);
 
-        //동그란 버튼 +
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
+        Intent intent = getIntent();
+        userid = intent.getStringExtra("id");
+        new LoadSchedule().execute();
+    }
+
+    public void UI(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -105,16 +116,18 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent intent = getIntent();
-        userid = intent.getStringExtra("id");
         View header = navigationView.getHeaderView(0);
         TextView id = header.findViewById(R.id.textView);
         id.setTextSize(25);
         id.setText(userid + "님 환영합니다.");
 
-        Calendar_init();
-        scheduleTask schedule_Task = new scheduleTask();
-        schedule_Task.execute();
+        //동그란 버튼 +
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+
+        mListView = findViewById(R.id.schedule_list);
+        myAdapter = new MyAdapter(showitem);
+        mListView.setAdapter(myAdapter);
     }
 
     public void Calendar_init(){
@@ -214,6 +227,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
         if(id == R.id.account){ //계정버튼눌렀을때 이동할 곳
             final EditText et = new EditText(Schedule.this);
+            et.setInputType(0x00000081);
             AlertDialog.Builder ad = new AlertDialog.Builder(Schedule.this);
             ad.setTitle("본인 확인").setMessage("비밀번호를 입력해 주세요.").setView(et).setCancelable(false);
             ad.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -239,12 +253,12 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
             startActivity(intent);
             finish();
         }else if(id == R.id.checkGroup){
-            Intent intent = new Intent(Schedule.this, Grouproom.class);
+            Intent intent = new Intent(Schedule.this, GroupList.class);
             intent.putExtra("id",userid);
             startActivity(intent);
             finish();
         }else if(id == R.id.logout){ //로그아웃 버튼 눌렀을 때
-            Intent logout_intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent logout_intent = new Intent(getApplicationContext(), LogIn.class);
             startActivity(logout_intent);
             finish();
         }
@@ -279,7 +293,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 ad.setPositiveButton("편집", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getApplicationContext(), updatememo.class);
+                        Intent intent = new Intent(getApplicationContext(), MemoUpdate.class);
                         intent.putExtra("index", showitem.get(i).getIndex());
                         intent.putExtra("title",showitem.get(i).getTitle());
                         intent.putExtra("id", userid);
@@ -325,12 +339,12 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 if (showitem.size() ==0){
                                     materialCalendarView.removeDecorators();
                                     Calendar_init();
-                                    new scheduleTask().execute();
+                                    new LoadSchedule().execute();
                                 }
                                 myAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.list_menu2:// 편집
-                                Intent intent = new Intent(getApplicationContext(), updatememo.class);
+                                Intent intent = new Intent(getApplicationContext(), MemoUpdate.class);
                                 intent.putExtra("index", showitem.get(i).getIndex());
                                 intent.putExtra("title",showitem.get(i).getTitle());
                                 intent.putExtra("id", userid);
@@ -352,7 +366,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         });
     }
 
-    public class scheduleTask extends AsyncTask<Void, Void, String> {
+    public class LoadSchedule extends AsyncTask<Void, Void, String> {
         LodingProgress lodingProgress = new LodingProgress(Schedule.this);
         @Override
         protected void onPreExecute() {
@@ -407,6 +421,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 int count = 0;
                 ArrayList<CalendarDay> days = new ArrayList<>();
                 Calendar calendar = Calendar.getInstance();
+                myItems.clear();
                 days.clear();
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
@@ -453,6 +468,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                     }
                 });
                 //최초실행시 리스트 보이게
+                showitem.clear();
                 CalendarDay date = materialCalendarView.getSelectedDate();
                 int year = date.getYear();
                 int month = date.getMonth();
@@ -534,7 +550,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected void onPostExecute(String result){
             super.onPostExecute(result);
-            Log.e("Delete : ", result);
         }
     }
 

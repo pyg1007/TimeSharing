@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.example.myapplication.Empty.EmptyAdapter;
 import com.example.myapplication.Empty.EmptyItem;
+import com.example.myapplication.CustomAdapterItem.MyItem;
+import com.example.myapplication.CustomAdapterItem.ShareItem;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,29 +40,30 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
     private String Tablename;
 
     private ArrayList<String> members;
-    private ArrayList<String> Time;
-    private List<MyItem> myItems;
-
-    private ShareItem shareItem;
     private String dates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_time);
-        Time = new ArrayList<>();
 
-        TextView textView = findViewById(R.id.Title);
+        GetData();
+        UI();
+    }
 
+    public void GetData(){
         Intent intent = getIntent();
         Userid = intent.getStringExtra("id");
         Tablename = intent.getStringExtra("GroupName");
         members = intent.getStringArrayListExtra("memberlist");
         dates = intent.getStringExtra("Selectdates");
 
-        //  new LoadEmptySchedule().execute();
         new FirstMenu().execute();
         new MenuLoad().execute();
+    }
+
+    public void UI(){
+        TextView textView = findViewById(R.id.Title);
 
         button = findViewById(R.id.AddMenu);
         listView = findViewById(R.id.list);
@@ -128,11 +132,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try{
-                Log.e("FirstEmpty",s);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 

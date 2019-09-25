@@ -2,16 +2,16 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -21,14 +21,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class LogIn extends AppCompatActivity implements View.OnClickListener{
     //UI부분 - 전역변수 선언
 
     //private static int Success_Login = 3000; // startActivityForResult를 사용할때 사용할 예정 필요없으면 지워도됨
 
     private Button Sign_In;
-    private Button LogIn;
+    private Button Log_In;
 
     private EditText ID;
     private EditText PW;
@@ -51,45 +50,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_log_in);
 
+        UI();
+        HideKeyboard();
+        EnterKey();
+    }
+
+    public void UI(){
         //UI연결
-
         Sign_In = findViewById(R.id.Sign_In);
         Sign_In.setOnClickListener(this);
-        LogIn = findViewById(R.id.LogIn);
-        LogIn.setOnClickListener(this);
-
+        Log_In = findViewById(R.id.LogIn);
+        Log_In.setOnClickListener(this);
 
         ID = findViewById(R.id.ID_Text);
         PW = findViewById(R.id.PW_Text);
-
-        ID.setOnKeyListener(new View.OnKeyListener() {
+    }
+//완료형태의 엔터키 누를시
+    public void EnterKey(){
+        PW.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        PW.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && keyCode == KeyEvent.KEYCODE_ENTER){
-                    PW.requestFocus();
+            public boolean onEditorAction(TextView textView, int keyCode, KeyEvent keyEvent) {
+                if(keyCode==EditorInfo.IME_ACTION_DONE){
+                    Log_In.performClick();
                     return true;
                 }
                 return false;
             }
         });
-
-        PW.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER)
-                {
-                    LogIn.performClick();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        /*
+    }
+    /*
         화면 클릭시 키보드 내려가게 하는 부분
          */
+    public void HideKeyboard(){
         relativeLayout = findViewById(R.id.FullScreen);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,16 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    /*
-    해당 디바이스 기기 해상도 구하는 메소드
-     */
-    public void getDPI(){
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        Log.e("DPI : ", String.valueOf(metrics.densityDpi));
-    }
-
     @Override
     public void onClick(View view) {
         switch(view.getId()){
@@ -127,23 +112,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else if(userPW.equals("")){
                     Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }else {
-                    login();
+                    new Login_task().execute();
                 }
                 break;
             case R.id.Sign_In: // 회원가입버튼
                 startActivity(new Intent(getApplicationContext(), SignIn.class));
                 finish();
                 break;
-
-
-
         }
     }
 
-
-
-    public void login() {
-        class Login_task extends AsyncTask<Void, Integer, Void> {
+     public class Login_task extends AsyncTask<Void, Integer, Void> {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
@@ -187,24 +166,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 super.onPostExecute(aVoid);
                 try {
                     if (server_data.equals("1")) {
-                        Intent intent = new Intent(MainActivity.this, Schedule.class);
+                        Intent intent = new Intent(LogIn.this, Schedule.class);
                         intent.putExtra("id", userID);
                         startActivity(intent);
                         finish();
                     } else if (server_data.equals("0")) {
-                        Toast.makeText(MainActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogIn.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(MainActivity.this, "아이디가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LogIn.this, "아이디가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         }
-        Login_task login_task = new Login_task();
-        login_task.execute();
-    }
-
 
 
     //뒤로가기 두번누르면 종료
@@ -226,4 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
 }
+

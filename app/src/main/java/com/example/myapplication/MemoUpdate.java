@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,9 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,12 +28,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
-public class updatememo extends AppCompatActivity implements View.OnClickListener{
-
+public class MemoUpdate extends AppCompatActivity implements View.OnClickListener{
     // 값 받아오기
     String userid, Title, Contents, Previoustime, Aftertime, Savedate;
     int _ID;
@@ -58,13 +53,13 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_updatememo);
+        setContentView(R.layout.activity_memo_update);
         data();
         UI();
         Spinner();
+        HideKeyboard();
+        EnterKey();
 
-        Spinner_Btn = findViewById(R.id.memo_date_imageView);
-        Spinner_Btn.setOnClickListener(this);
     }
 
     public void data(){
@@ -95,18 +90,39 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
         Title_edit.setText(Title);
         Schedule_edit = findViewById(R.id.memo_contents);
         Schedule_edit.setText(Contents);
+        Spinner_Btn = findViewById(R.id.memo_date_imageView);
+        Spinner_Btn.setOnClickListener(this);
+    }
 
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    /*
+       화면 클릭시 키보드 내려가게 하는 부분
+    */
+    public void HideKeyboard(){
         linearLayout = findViewById(R.id.FullScreen);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(),0);
-                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(),0);
+                try {
+                    imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+            }
+        });
+    }
+
+    public void EnterKey(){
+        Schedule_edit.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        Schedule_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == EditorInfo.IME_ACTION_DONE){
+                    Insert_Btn.performClick();
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -170,7 +186,7 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DATE);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(updatememo.this, listener, year,month,day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(MemoUpdate.this, listener, year,month,day);
                 datePickerDialog.show();
                 break;
         }
@@ -201,7 +217,7 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
             Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
         }
         else{
-            new updateschedule().execute();
+            new ScheduleUpdate().execute();
             Intent intent = new Intent(this, Schedule.class);
             intent.putExtra("id",userid);
             startActivity(intent);
@@ -218,7 +234,7 @@ public class updatememo extends AppCompatActivity implements View.OnClickListene
     }
 
 
-    public class updateschedule extends AsyncTask<Void, Void, String> {
+    public class ScheduleUpdate extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {

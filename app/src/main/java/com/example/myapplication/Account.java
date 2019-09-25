@@ -7,7 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,13 +56,22 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
+        GetData();
+        UI();
+    }
+
+    public void GetData(){
+
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
 
         new LoadUserinfo().execute();
+    }
 
+    public void UI(){
         ID = findViewById(R.id.Id);
         ID.setText(userid + "님의 계정정보");
+        ID.setGravity(Gravity.CENTER);
         ID.setTextSize(16);
 
         Pw = findViewById(R.id.pw);
@@ -67,6 +80,52 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         TextLengthChk = findViewById(R.id.length_check);
         Account_edit = findViewById(R.id.account);
 
+        confirm = findViewById(R.id.confirm);
+        cancel = findViewById(R.id.cancel);
+        confirm.setOnClickListener(this);
+        cancel.setOnClickListener(this);
+
+        HideKeyboard();
+        RealTimePWCheck();
+        EnterKey();
+    }
+
+    public void EnterKey(){
+        Account_edit.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        Account_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int keyCode, KeyEvent keyEvent) {
+                if(keyCode == EditorInfo.IME_ACTION_DONE){
+                    confirm.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+
+    /*
+        화면 클릭시 키보드 내려가게 하는 부분
+         */
+    public void HideKeyboard(){
+        relativeLayout = findViewById(R.id.FullScreen);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(Pw.getWindowToken(),0);
+                    imm.hideSoftInputFromWindow(Pw_chk.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(Account_edit.getWindowToken(),0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void RealTimePWCheck(){
         Pw_chk.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -104,25 +163,6 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
 
             }
         });
-
-        confirm = findViewById(R.id.confirm);
-        cancel = findViewById(R.id.cancel);
-        confirm.setOnClickListener(this);
-        cancel.setOnClickListener(this);
-
-        /*
-        화면 클릭시 키보드 내려가게 하는 부분
-         */
-        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        relativeLayout = findViewById(R.id.FullScreen);
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imm.hideSoftInputFromWindow(Pw.getWindowToken(),0);
-                imm.hideSoftInputFromWindow(Pw_chk.getWindowToken(), 0);
-                imm.hideSoftInputFromWindow(Account_edit.getWindowToken(),0);
-            }
-        });
     }
 
     @Override
@@ -134,15 +174,15 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
                 }else if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
                     Toast.makeText(this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }else{
-                    updateuser _update = new updateuser();
-                    _update.execute();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    new UpdateUserinfo().execute();
+                    Intent intent = new Intent(getApplicationContext(), LogIn.class);
                     Toast.makeText(this, "비밀번호 변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
                 }
                 break;
             case R.id.cancel:
+                Toast.makeText(this, "계정정보 변경을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), Schedule.class);
                 intent.putExtra("id", userid);
                 startActivity(intent);
@@ -226,7 +266,7 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    public class updateuser extends AsyncTask<Void, Void, String> {
+    public class UpdateUserinfo extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {

@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_toRightOf="@+id/ID_textview"
-            android:imeOptions="actionNext"
+            android:inputType="text"
             android:maxLength="20"
             android:singleLine="true" />
 
@@ -73,7 +73,6 @@
             android:layout_below="@+id/ID_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/PW_textview"
-            android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:maxLength="20"
             android:singleLine="true" />
@@ -86,7 +85,6 @@
             android:layout_below="@+id/PW_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/PW_textview"
-            android:imeOptions="actionNext"
             android:inputType="textPassword"
             android:singleLine="true" />
 
@@ -97,6 +95,7 @@
             android:layout_below="@+id/PW_check_Text"
             android:layout_alignLeft="@+id/ID_Text"
             android:layout_toRightOf="@+id/NICKNAME_textview"
+            android:inputType="textPersonName"
             android:maxLength="10"
             android:singleLine="true" />
 

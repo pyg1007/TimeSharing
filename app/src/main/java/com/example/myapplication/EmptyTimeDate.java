@@ -4,13 +4,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.myapplication.CustomAdapterItem.MyItem;
+import com.example.myapplication.CustomAdapterItem.ShareItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,8 +38,11 @@ public class EmptyTimeDate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empty_time_date);
 
-        TextView textView = findViewById(R.id.Title);
+        GetData();
+        UI();
+    }
 
+    public void GetData(){
         //넘어온 데이터 받은 것.
         Intent intent = getIntent();
 
@@ -51,12 +56,14 @@ public class EmptyTimeDate extends AppCompatActivity {
         Starttime = intent.getIntExtra("Starttime", 0);
         Endtime = intent.getIntExtra("Endtime", 0);
         //
+        new LoadEmptySchedule().execute();
+    }
 
+    public void UI(){
+        TextView textView = findViewById(R.id.Title);
         textView.setGravity(Gravity.CENTER);
         textView.setTextSize(20);
         textView.setText(""+Dates + "일의 빈 시간");
-
-        new LoadEmptySchedule().execute();
     }
 
     public class LoadEmptySchedule extends AsyncTask<Void, Void, String> {
@@ -143,7 +150,7 @@ public class EmptyTimeDate extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if(!SplitTime[i].equals("")) {
-                            Intent intent = new Intent(EmptyTimeDate.this, AllScheduleInsert.class);
+                            Intent intent = new Intent(EmptyTimeDate.this, GroupShcedule.class);
                             intent.putExtra("Time", SplitTime[i]);
                             intent.putExtra("id", Userid);
                             intent.putStringArrayListExtra("memberlist", members);

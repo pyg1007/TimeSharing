@@ -8,12 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.myapplication.CustomAdapter.CheckboxListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,7 +50,11 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkbox_list);
 
+        GetData();
+        UI();
+    }
 
+    public void GetData(){
         members = new ArrayList<>();
         members_copy = new ArrayList<>();
 
@@ -65,11 +70,14 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         }else{
             members.add(userid);
         }
+
+        new GetMemeber().execute(userid);
+    }
+
+    public void UI(){
         checkboxlistView = findViewById(R.id.checkbox_list);
         Invite_btn = findViewById(R.id.Invite);
         Invite_btn.setOnClickListener(this);
-
-        new GetMemeber().execute(userid);
     }
 
     @Override

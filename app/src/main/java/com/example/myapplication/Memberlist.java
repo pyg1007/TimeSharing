@@ -1,14 +1,12 @@
 package com.example.myapplication;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -16,15 +14,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.CustomAdapterItem.User;
+import com.example.myapplication.CustomAdapter.UserListAdapter;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Member;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -48,23 +47,27 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memberlist);
 
+        GetData();
+        UI();
+        showlist();
+    }
+
+    public void GetData(){
         Members = new ArrayList<>();
 
         Intent intent = getIntent();
         userid = intent.getStringExtra("id");
-
-        floatingActionButton = findViewById(R.id.multipleadd);
-        floatingActionButton.setOnClickListener(this);
-
         Members.add(userid);
-
-        addlist();
     }
 
-    public void addlist(){
-        BackgroundTask backgroundTask = new BackgroundTask();
-        backgroundTask.execute();
+    public void UI(){
+        listView = (ListView) findViewById(R.id.listView);
+        floatingActionButton = findViewById(R.id.multipleadd);
+        floatingActionButton.setOnClickListener(this);
+    }
 
+    public void showlist(){
+        new ShowMemberList().execute();
     }
 
     @Override
@@ -123,7 +126,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         });
     }
 
-    public class BackgroundTask extends AsyncTask<Void, Void, String> {
+    public class ShowMemberList extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... voids) {
@@ -172,8 +175,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            listView = (ListView) findViewById(R.id.listView);
             userList = new ArrayList<User>();
 
             try {

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.CustomAdapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.example.myapplication.R;
 
 import java.util.List;
 

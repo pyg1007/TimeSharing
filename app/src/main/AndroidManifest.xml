@@ -11,26 +11,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EmptyInsertMenu"></activity>
-        <activity android:name=".EmptyTimeDate" />
-        <activity android:name=".AllScheduleInsert" />
-        <activity android:name=".EmptyTime" />
-        <activity android:name=".CheckboxList" />
-        <activity android:name=".Grouproom" />
-        <activity android:name=".Account" />
-        <activity android:name=".Group" />
-        <activity android:name=".updatememo" />
-        <activity android:name=".Memo" />
-        <activity android:name=".Schedule" />
-        <activity android:name=".SignIn" />
-        <activity android:name=".Memberlist" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GroupShcedule" />
+        <activity android:name=".MemoUpdate" />
+        <activity android:name=".GroupList" />
+        <activity android:name=".EmptyInsertMenu" />
+        <activity android:name=".EmptyTimeDate" />
+        <activity android:name=".EmptyTime" />
+        <activity android:name=".CheckboxList" />
+        <activity android:name=".Account" />
+        <activity android:name=".Group" />
+        <activity android:name=".Memo" />
+        <activity android:name=".Schedule" />
+        <activity android:name=".SignIn" />
+        <activity android:name=".Memberlist" />
+        <activity android:name=".LogIn"></activity>
 
         <service
             android:name=".fcm.MyFirebaseMessagingService"

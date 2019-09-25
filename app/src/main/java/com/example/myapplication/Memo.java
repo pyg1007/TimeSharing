@@ -8,8 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -52,6 +54,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
     private String Previoustime;
     private String Aftertime;
     private String Savedate;
+    private String Zero_Add_Month;
+    private int year, month, day;
 
     private LinearLayout linearLayout;
     private InputMethodManager imm;
@@ -60,7 +64,26 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
+        GetData();
+        UI();
+        HideKeyboard();
+        EnterKey();
+    }
 
+    public void GetData(){
+        Intent intent = getIntent();
+        year = intent.getIntExtra("year", 0);
+        month = intent.getIntExtra("month", 0);
+        day = intent.getIntExtra("day", 0);
+        Zero_Add_Month = null;
+        if (month < 10) {
+            Zero_Add_Month = "0" + String.valueOf(month);
+        }
+        Savedate = String.valueOf(year) + Zero_Add_Month + String.valueOf(day);
+        userid = intent.getStringExtra("id");
+    }
+
+    public void UI(){
         Insert_Btn = findViewById(R.id.memo_insert_button);
         Cancel_Btn = findViewById(R.id.memo_cancel_button);
         Spinner_Btn = findViewById(R.id.memo_date_imageView);
@@ -68,25 +91,50 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         Cancel_Btn.setOnClickListener(this);
         Spinner_Btn.setOnClickListener(this);
 
-
-        Intent intent = getIntent();
-        int year = intent.getIntExtra("year", 0);
-        int month = intent.getIntExtra("month", 0);
-        int day = intent.getIntExtra("day", 0);
-        String Month = null;
-        if (month < 10) {
-            Month = "0" + String.valueOf(month);
-        }
-        Savedate = String.valueOf(year) + Month + String.valueOf(day);
-        userid = intent.getStringExtra("id");
         textView = findViewById(R.id.memo_date);
         textView.setTextSize(16);
         textView.setGravity(Gravity.CENTER);
-        textView.setText(year + "년 " + month + "월 " + day + "일 ");
-
+        textView.setText(year + "년 " + Zero_Add_Month + "월 " + day + "일 ");
         Title_edit = findViewById(R.id.memo_title);
         Schedule_edit = findViewById(R.id.memo_contents);
+        Spinner();
+    }
 
+    public void EnterKey(){
+        Schedule_edit.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        Schedule_edit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int keyCode, KeyEvent keyEvent) {
+                if (keyCode == EditorInfo.IME_ACTION_DONE){
+                    Insert_Btn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    /*
+                화면 클릭시 키보드 내려가게 하는 부분
+                 */
+    public void HideKeyboard(){
+
+        linearLayout = findViewById(R.id.FullScreen);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void Spinner(){
         Spinner_1 = findViewById(R.id.Clack_Spinner_1);
         Spinner_1.setSelection(NowTime());
         Spinner_1.setGravity(Gravity.CENTER);
@@ -114,24 +162,6 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
 
             }
         });
-
-        /*
-        화면 클릭시 키보드 내려가게 하는 부분
-         */
-        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        linearLayout = findViewById(R.id.FullScreen);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    imm.hideSoftInputFromWindow(Title_edit.getWindowToken(), 0);
-                    imm.hideSoftInputFromWindow(Schedule_edit.getWindowToken(), 0);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
     }
 
     public int NowTime() {
