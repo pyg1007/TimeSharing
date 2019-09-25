@@ -108,15 +108,16 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 Tablename = et.getText().toString().trim();
-                Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
-                if(Tablename.getBytes().length == Tablename.length()){
-                    for (int count = 0; count<Members.size(); count++) {
-                        new Insertdata().execute(Members.get(count));
+                if (Tablename.equals("")){
+                    Toast.makeText(Memberlist.this, "방제목을 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                }else {
+                    Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}", ""); // 숫자와 특수문자 제거
+                    if (Tablename.getBytes().length == Tablename.length()) {
+                        new Tablecreate().execute();
+                        dialog.dismiss();
+                    } else if (Tablename.getBytes().length == 3 * Tablename.length()) {
+                        Toast.makeText(Memberlist.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
-                    new Tablecreate().execute();
-                    dialog.dismiss();
-                }else if(Tablename.getBytes().length == 3 * Tablename.length()){
-                    Toast.makeText(Memberlist.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -258,6 +259,9 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 } else if (s.equals("success")) {
                     Toast.makeText(Memberlist.this, "그룹생성 성공", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Memberlist.this, Group.class);
+                    for (int count = 0; count < Members.size(); count++) {
+                        new Insertdata().execute(Members.get(count));
+                    }
                     intent.putExtra("GroupName", Tablename);
                     intent.putExtra("id", userid);
                     intent.putStringArrayListExtra("memberid", Members);

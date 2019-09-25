@@ -93,6 +93,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 }else{
                     if (members.size()>1) {
                         final EditText editText = new EditText(CheckboxList.this);
+                        editText.setHint("영어로만 가능합니다. 숫자와 특수문자는 자동제거됩니다.");
                         AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
                         ad.setTitle("그룹명")
                                 .setMessage("그룹명을 입력해 주세요.")
@@ -116,15 +117,17 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onClick(View v) {
                                 Tablename = editText.getText().toString().trim();
-                                Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
-                                if(Tablename.getBytes().length == Tablename.length()){
-                                    for (int count = 0; count < members.size(); count++) {
-                                        new Insertdata().execute(members.get(count));
+                                if (Tablename.equals("")){
+                                    Toast.makeText(CheckboxList.this, "방 이름을 설정해주세요.", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
+                                    if(Tablename.getBytes().length == Tablename.length()) {
+                                        new Tablecreate().execute();
+                                        dialog.dismiss();
                                     }
-                                    new Tablecreate().execute();
-                                    dialog.dismiss();
-                                }else if(Tablename.getBytes().length == 3 * Tablename.length()){
-                                    Toast.makeText(CheckboxList.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
+                                    else if(Tablename.getBytes().length == 3 * Tablename.length()){
+                                        Toast.makeText(CheckboxList.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         });
@@ -329,6 +332,9 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(CheckboxList.this, "이미 동일한 그룹명이 존재합니다.", Toast.LENGTH_SHORT).show();
                 } else if (s.equals("success")) {
                     Toast.makeText(CheckboxList.this, "그룹생성 성공", Toast.LENGTH_SHORT).show();
+                    for (int count = 0; count < members.size(); count++) {
+                        new Insertdata().execute(members.get(count));
+                    }
                     Intent intent = new Intent(CheckboxList.this, Group.class);
                     intent.putExtra("GroupName", Tablename);
                     intent.putExtra("id", userid);
