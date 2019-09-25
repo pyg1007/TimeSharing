@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,12 +77,9 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.Invite:
                 if(flag == true) {
-                    Log.e("members size : ", String.valueOf(members.size()));
-                    Log.e("copy members size : ", String.valueOf(members_copy.size()));
                     if(members.size()>members_copy.size()) {
                         Intent intent = new Intent(CheckboxList.this, Group.class);
                         for (int i = 0; i < members.size(); i++) {
-                            Log.e("인서트왜됨? : ", "왜되냐고 !!!");
                             new Insertdata().execute(members.get(i));
                         }
                         intent.putExtra("id", userid);
@@ -94,11 +92,11 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                     }
                 }else{
                     if (members.size()>1) {
-                        final EditText et = new EditText(CheckboxList.this);
+                        final EditText editText = new EditText(CheckboxList.this);
                         AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
                         ad.setTitle("그룹명")
                                 .setMessage("그룹명을 입력해 주세요.")
-                                .setView(et)
+                                .setView(editText)
                                 .setCancelable(false)
                                 .setPositiveButton("생성", new DialogInterface.OnClickListener() {
                                     @Override
@@ -112,13 +110,12 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                                 Toast.makeText(CheckboxList.this, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
                             }
                         });
-                        ad.show();
                         final AlertDialog dialog = ad.create();
                         dialog.show();
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Tablename = et.getText().toString().trim();
+                                Tablename = editText.getText().toString().trim();
                                 Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
                                 if(Tablename.getBytes().length == Tablename.length()){
                                     for (int count = 0; count < members.size(); count++) {
