@@ -79,6 +79,8 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         PW_realtime_chk = findViewById(R.id.Pw_check);
         TextLengthChk = findViewById(R.id.length_check);
         Account_edit = findViewById(R.id.account);
+        Pw.setHint("8자이상 입력하세요.");
+        Pw_chk.setHint("8자이상 입력하세요.");
 
         confirm = findViewById(R.id.confirm);
         cancel = findViewById(R.id.cancel);
@@ -171,7 +173,10 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
             case R.id.confirm:
                 if(Pw.getText().toString().trim().equals("")){
                     Toast.makeText(this, "바꾸실 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }else if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
+                }else if(Pw.getText().toString().length() < 8){
+                    Toast.makeText(this, "8자 이상으로 설정해 주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if(!Pw.getText().toString().trim().equals(Pw_chk.getText().toString().trim())){
                     Toast.makeText(this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }else{
                     new UpdateUserinfo().execute();

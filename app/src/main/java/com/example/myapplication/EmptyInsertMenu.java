@@ -27,8 +27,10 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
     private EditText Title;
     private Button Add, Cancel;
     private Spinner FirstTime, EndTime;
+    private int PreTime, AftTime;
+    private boolean flag = false;
 
-    private String Userid, TableName, Dates;
+    private String Userid, TableName, Dates, MenuName;
     private ArrayList<String> members;
 
     private String Start, End;
@@ -46,6 +48,12 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         Intent intent = getIntent();
         Userid = intent.getStringExtra("id");
         TableName = intent.getStringExtra("GroupName");
+        flag = intent.getBooleanExtra("Editcheck", false);
+        if (flag == true){
+            MenuName = intent.getStringExtra("Menu");
+            PreTime = intent.getIntExtra("Start",0);
+            AftTime = intent.getIntExtra("End",0);
+        }
         members = intent.getStringArrayListExtra("memberlist");
         Dates = intent.getStringExtra("Selectdates");
     }
@@ -57,12 +65,20 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         Add.setOnClickListener(this);
         Cancel.setOnClickListener(this);
 
+        if (flag){
+            Title.setText(MenuName);
+        }
         Spinner();
     }
 
     public void Spinner(){
         FirstTime = findViewById(R.id.Clack_Spinner_1);
         EndTime = findViewById(R.id.Clack_Spinner_2);
+
+        if (flag){
+            FirstTime.setSelection(PreTime);
+            EndTime.setSelection(AftTime);
+        }
 
         FirstTime.setGravity(Gravity.CENTER);
         FirstTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,7 +119,10 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
                 }else if(Integer.parseInt(setstart[0]) >= Integer.parseInt(setend[0])){
                     Toast.makeText(this, "시간설정을 다시해주세요.", Toast.LENGTH_SHORT).show();
                 } else{
-                    new MenuInsert().execute(Title.getText().toString(), setstart[0], setend[0]);
+                    if (!flag)
+                        new MenuInsert().execute(Title.getText().toString(), setstart[0], setend[0]);
+                    else if (flag)
+                        new MenuUpdate().execute(MenuName,Title.getText().toString(), setstart[0], setend[0]);
                     intent.putExtra("id",Userid);
                     intent.putExtra("GroupName",TableName);
                     intent.putExtra("memberlist", members);
@@ -181,6 +200,60 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public class MenuUpdate extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/UpdateMenu.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(TableName, "UTF-8");
+                data += "&" + URLEncoder.encode("menuname", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("changemenuname", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                data += "&" + URLEncoder.encode("starttime", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
+                data += "&" + URLEncoder.encode("endtime", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try{
+                Log.e("TAg : ", s);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
