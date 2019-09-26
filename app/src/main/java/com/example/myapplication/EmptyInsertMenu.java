@@ -112,6 +112,9 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(EmptyInsertMenu.this, EmptyTime.class);
         String[] setstart = Start.split(" ");
         String[] setend = End.split(" ");
+        int Set_start, Set_End;
+        Set_start = Integer.parseInt(setstart[0]);
+        Set_End = Integer.parseInt(setend[0]);
         switch (view.getId()){
             case R.id.Add:
                 if(Title.getText().toString().equals("")){
@@ -120,9 +123,9 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "시간설정을 다시해주세요.", Toast.LENGTH_SHORT).show();
                 } else{
                     if (!flag)
-                        new MenuInsert().execute(Title.getText().toString(), setstart[0], setend[0]);
+                        new MenuInsert().execute(Title.getText().toString(), String.valueOf(Set_start), String.valueOf(Set_End));
                     else if (flag)
-                        new MenuUpdate().execute(MenuName,Title.getText().toString(), setstart[0], setend[0]);
+                        new MenuUpdate().execute(Title.getText().toString(), String.valueOf(Set_start), String.valueOf(Set_End));
                     intent.putExtra("id",Userid);
                     intent.putExtra("GroupName",TableName);
                     intent.putExtra("memberlist", members);
@@ -207,10 +210,12 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
             try {
                 String link = "http://pyg941007.dothome.co.kr/UpdateMenu.php";
                 String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(TableName, "UTF-8");
-                data += "&" + URLEncoder.encode("menuname", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
-                data += "&" + URLEncoder.encode("changemenuname", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
-                data += "&" + URLEncoder.encode("starttime", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
-                data += "&" + URLEncoder.encode("endtime", "UTF-8") + "=" + URLEncoder.encode(strings[3], "UTF-8");
+                data += "&" + URLEncoder.encode("menuname", "UTF-8") + "=" + URLEncoder.encode(MenuName, "UTF-8");
+                data += "&" + URLEncoder.encode("start", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(PreTime), "UTF-8");
+                data += "&" + URLEncoder.encode("end", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(AftTime), "UTF-8");
+                data += "&" + URLEncoder.encode("changemenuname", "UTF-8") + "=" + URLEncoder.encode(strings[0], "UTF-8");
+                data += "&" + URLEncoder.encode("starttime", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
+                data += "&" + URLEncoder.encode("endtime", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
 
                 URL url = new URL(link);
 
@@ -248,7 +253,9 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try{
-                Log.e("TAg : ", s);
+                if (s.equals("success")){
+                    Toast.makeText(EmptyInsertMenu.this, "변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
