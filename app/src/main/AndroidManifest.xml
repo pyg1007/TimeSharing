@@ -20,7 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".GroupShcedule" />
-        <activity android:name=".MemoUpdate" />
         <activity android:name=".GroupList" />
         <activity android:name=".EmptyInsertMenu" />
         <activity android:name=".EmptyTimeDate" />

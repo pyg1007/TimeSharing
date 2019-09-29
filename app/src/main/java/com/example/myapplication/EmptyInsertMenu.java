@@ -22,7 +22,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickListener{
+public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickListener {
 
     private EditText Title;
     private Button Add, Cancel;
@@ -34,6 +34,7 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> members;
 
     private String Start, End;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,39 +44,39 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         UI();
     }
 
-    public void GetData(){
+    public void GetData() {
         // 데이터 전달받음
         Intent intent = getIntent();
         Userid = intent.getStringExtra("id");
         TableName = intent.getStringExtra("GroupName");
         flag = intent.getBooleanExtra("Editcheck", false);
-        if (flag == true){
+        if (flag == true) {
             MenuName = intent.getStringExtra("Menu");
-            PreTime = intent.getIntExtra("Start",0);
-            AftTime = intent.getIntExtra("End",0);
+            PreTime = intent.getIntExtra("Start", 0);
+            AftTime = intent.getIntExtra("End", 0);
         }
         members = intent.getStringArrayListExtra("memberlist");
         Dates = intent.getStringExtra("Selectdates");
     }
 
-    public void UI(){
+    public void UI() {
         Title = findViewById(R.id.MenuNameEdit);
         Add = findViewById(R.id.Add);
         Cancel = findViewById(R.id.Cancle);
         Add.setOnClickListener(this);
         Cancel.setOnClickListener(this);
 
-        if (flag){
+        if (flag) {
             Title.setText(MenuName);
         }
         Spinner();
     }
 
-    public void Spinner(){
+    public void Spinner() {
         FirstTime = findViewById(R.id.Clack_Spinner_1);
         EndTime = findViewById(R.id.Clack_Spinner_2);
 
-        if (flag){
+        if (flag) {
             FirstTime.setSelection(PreTime);
             EndTime.setSelection(AftTime);
         }
@@ -115,30 +116,30 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         int Set_start, Set_End;
         Set_start = Integer.parseInt(setstart[0]);
         Set_End = Integer.parseInt(setend[0]);
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.Add:
-                if(Title.getText().toString().equals("")){
+                if (Title.getText().toString().equals("")) {
                     Toast.makeText(this, "메뉴이름을 입력하세요.", Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(setstart[0]) >= Integer.parseInt(setend[0])){
+                } else if (Integer.parseInt(setstart[0]) >= Integer.parseInt(setend[0])) {
                     Toast.makeText(this, "시간설정을 다시해주세요.", Toast.LENGTH_SHORT).show();
-                } else{
+                } else {
                     if (!flag)
                         new MenuInsert().execute(Title.getText().toString(), String.valueOf(Set_start), String.valueOf(Set_End));
                     else if (flag)
                         new MenuUpdate().execute(Title.getText().toString(), String.valueOf(Set_start), String.valueOf(Set_End));
-                    intent.putExtra("id",Userid);
-                    intent.putExtra("GroupName",TableName);
+                    intent.putExtra("id", Userid);
+                    intent.putExtra("GroupName", TableName);
                     intent.putExtra("memberlist", members);
-                    intent.putExtra("Selectdates",Dates);
+                    intent.putExtra("Selectdates", Dates);
                     startActivity(intent);
                     finish();
                 }
                 break;
             case R.id.Cancle:
-                intent.putExtra("id",Userid);
-                intent.putExtra("GroupName",TableName);
+                intent.putExtra("id", Userid);
+                intent.putExtra("GroupName", TableName);
                 intent.putExtra("memberlist", members);
-                intent.putExtra("Selectdates",Dates);
+                intent.putExtra("Selectdates", Dates);
                 startActivity(intent);
                 finish();
                 break;
@@ -180,9 +181,8 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
                 bufferedReader.close();
                 inputStream.close();
                 wr.close();
-                return  stringBuilder.toString().trim();
-            }
-            catch (Exception e) {
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -191,13 +191,13 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try{
-                if (s.equals("fail")){
+            try {
+                if (s.equals("fail")) {
                     Toast.makeText(EmptyInsertMenu.this, "이미 같은 카테고리가 존재합니다.", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(EmptyInsertMenu.this, "생성 성공", Toast.LENGTH_SHORT).show();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -241,9 +241,8 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
                 bufferedReader.close();
                 inputStream.close();
                 wr.close();
-                return  stringBuilder.toString().trim();
-            }
-            catch (Exception e) {
+                return stringBuilder.toString().trim();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -252,11 +251,11 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            try{
-                if (s.equals("success")){
+            try {
+                if (s.equals("success")) {
                     Toast.makeText(EmptyInsertMenu.this, "변경이 완료되었습니다.", Toast.LENGTH_SHORT).show();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -265,10 +264,10 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(EmptyInsertMenu.this, EmptyTime.class);
-        intent.putExtra("id",Userid);
-        intent.putExtra("GroupName",TableName);
+        intent.putExtra("id", Userid);
+        intent.putExtra("GroupName", TableName);
         intent.putExtra("memberlist", members);
-        intent.putExtra("Selectdates",Dates);
+        intent.putExtra("Selectdates", Dates);
         startActivity(intent);
         super.onBackPressed();
     }

@@ -67,7 +67,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         ID = findViewById(R.id.ID_Text);
         PW = findViewById(R.id.PW_Text);
     }
-//완료형태의 엔터키 누를시
+    //완료형태의 엔터키 누를시
     public void EnterKey(){
         PW.setImeOptions(EditorInfo.IME_ACTION_DONE);
         PW.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -122,64 +122,64 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-     public class Login_task extends AsyncTask<Void, Integer, Void> {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                try {
-                    String link = "http://pyg941007.dothome.co.kr/Login.php";
-                    String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
-                    data += "&" + URLEncoder.encode("userpassword", "UTF-8") + "=" + URLEncoder.encode(userPW, "UTF-8");
+    public class Login_task extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/Login.php";
+                String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
+                data += "&" + URLEncoder.encode("userpassword", "UTF-8") + "=" + URLEncoder.encode(userPW, "UTF-8");
 
-                    URL url = new URL(link);
-                    URLConnection conn = url.openConnection();
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
 
-                    conn.setDoOutput(true);
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                    wr.write(data);
-                    wr.flush();
+                wr.write(data);
+                wr.flush();
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                    StringBuilder sb = new StringBuilder();
-                    String line = null;
+                StringBuilder sb = new StringBuilder();
+                String line = null;
 
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
-                        break;
-                    }
-                    server_data = sb.toString().trim();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                    break;
                 }
-                return null;
-            }
+                server_data = sb.toString().trim();
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            return null;
+        }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                try {
-                    if (server_data.equals("1")) {
-                        Intent intent = new Intent(LogIn.this, Schedule.class);
-                        intent.putExtra("id", userID);
-                        startActivity(intent);
-                        finish();
-                    } else if (server_data.equals("0")) {
-                        Toast.makeText(LogIn.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(LogIn.this, "아이디가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            try {
+                if (server_data.equals("1")) {
+                    Intent intent = new Intent(LogIn.this, Schedule.class);
+                    intent.putExtra("id", userID);
+                    startActivity(intent);
+                    finish();
+                } else if (server_data.equals("0")) {
+                    Toast.makeText(LogIn.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LogIn.this, "아이디가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
+    }
 
 
     //뒤로가기 두번누르면 종료
@@ -199,8 +199,6 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         }
 
     }
-
-
 
 }
 

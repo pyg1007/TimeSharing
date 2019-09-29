@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,7 +67,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
     private MyAdapter myAdapter;
     private List<MyItem> myItems;
     private List<MyItem> showitem;
-
+    private boolean flag = false;
 
     private final long FINISH_TIMER = 2000;
     private long backpresstimer = 0;
@@ -293,7 +292,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 ad.setPositiveButton("편집", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getApplicationContext(), MemoUpdate.class);
+                        Intent intent = new Intent(getApplicationContext(), Memo.class);
+                        flag = true;
+                        intent.putExtra("flag",flag);
                         intent.putExtra("index", showitem.get(i).getIndex());
                         intent.putExtra("title",showitem.get(i).getTitle());
                         intent.putExtra("id", userid);
@@ -344,7 +345,9 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                                 myAdapter.notifyDataSetChanged();
                                 break;
                             case R.id.list_menu2:// 편집
-                                Intent intent = new Intent(getApplicationContext(), MemoUpdate.class);
+                                Intent intent = new Intent(getApplicationContext(), Memo.class);
+                                flag = true;
+                                intent.putExtra("flag",flag);
                                 intent.putExtra("index", showitem.get(i).getIndex());
                                 intent.putExtra("title",showitem.get(i).getTitle());
                                 intent.putExtra("id", userid);
