@@ -122,9 +122,9 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         }
     }
 
-    public class Login_task extends AsyncTask<Void, Integer, Void> {
+    public class Login_task extends AsyncTask<String, Void, String> {
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(String... strings) {
             try {
                 String link = "http://pyg941007.dothome.co.kr/Login.php";
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
@@ -146,10 +146,10 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
 
                 while ((line = reader.readLine()) != null) {
                     sb.append(line + "\n");
-                    break;
                 }
-                server_data = sb.toString().trim();
-
+                reader.close();
+                wr.close();
+                return sb.toString().trim();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -162,15 +162,14 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(String s) {
             try {
-                if (server_data.equals("1")) {
+                if (s.equals("1")) {
                     Intent intent = new Intent(LogIn.this, Schedule.class);
                     intent.putExtra("id", userID);
                     startActivity(intent);
                     finish();
-                } else if (server_data.equals("0")) {
+                } else if (s.equals("0")) {
                     Toast.makeText(LogIn.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LogIn.this, "아이디가 존재하지 않습니다.", Toast.LENGTH_SHORT).show();

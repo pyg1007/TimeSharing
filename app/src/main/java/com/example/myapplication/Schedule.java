@@ -556,18 +556,16 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
 
-    public class Confirm extends AsyncTask<Void, Integer, Void>{
-        String server_data;
+    public class Confirm extends AsyncTask<String, Void, String>{
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(String s) {
             try {
-                if (server_data.equals("1")) {
+                if (s.equals("1")) {
                     Intent intent = new Intent(getApplicationContext(), Account.class);
                     intent.putExtra("id", userid);
                     startActivity(intent);
                     finish();
-                } else if (server_data.equals("0")) {
+                } else if (s.equals("0")) {
                     Toast.makeText(getApplicationContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                 }
             }catch (Exception e){
@@ -576,7 +574,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(String... strings) {
             try{
             String link = "http://pyg941007.dothome.co.kr/Login.php";
             String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
@@ -598,9 +596,8 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
 
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
-                break;
             }
-            server_data = sb.toString().trim();
+            return sb.toString().trim();
 
         } catch (Exception e) {
             e.printStackTrace();
