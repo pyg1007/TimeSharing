@@ -32,8 +32,6 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
     private EditText ID;
     private EditText PW;
 
-    private String server_data = null;
-
     private final long FINISH_TIMER = 2000;
     private long backpresstimer = 0;
 

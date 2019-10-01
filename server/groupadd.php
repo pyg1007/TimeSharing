@@ -8,24 +8,18 @@
         echo "Failed to connect to MySQL : " . mysqli_connect_error();
     }
 
-    $memberid = $_POST['memberid'];
+    $userid = $_POST['userid'];
     $table = $_POST['tablename'];
     $tablename = "shareroom".$table;
 
-    $check = mysqli_query($con, "SELECT * FROM $tablename WHERE userid = '$memberid'");
+   
+    $result  = mysqli_query($con, "INSERT INTO $tablename (userid) VALUES ('$userid')");
 
-    $row = mysqli_num_rows($check);
-    if($row > 0){
-        echo "exists";
+    if($result){
+        echo 'success';
     }else{
-        $result  = mysqli_query($con, "INSERT INTO $tablename (userid) VALUES ('$memberid')");
-
-        if($result){
-           echo 'success';
-        }else{
-            echo "failure";
-        }   
-    }
+        echo "failure";
+    }   
 
     mysqli_close($con);
 ?>

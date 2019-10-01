@@ -31,7 +31,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
     private boolean flag = false;
 
     private String Userid, TableName, Dates, MenuName;
-    private ArrayList<String> members;
 
     private String Start, End;
 
@@ -55,7 +54,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
             PreTime = intent.getIntExtra("Start", 0);
             AftTime = intent.getIntExtra("End", 0);
         }
-        members = intent.getStringArrayListExtra("memberlist");
         Dates = intent.getStringExtra("Selectdates");
     }
 
@@ -129,7 +127,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
                         new MenuUpdate().execute(Title.getText().toString(), String.valueOf(Set_start), String.valueOf(Set_End));
                     intent.putExtra("id", Userid);
                     intent.putExtra("GroupName", TableName);
-                    intent.putExtra("memberlist", members);
                     intent.putExtra("Selectdates", Dates);
                     startActivity(intent);
                     finish();
@@ -138,7 +135,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
             case R.id.Cancle:
                 intent.putExtra("id", Userid);
                 intent.putExtra("GroupName", TableName);
-                intent.putExtra("memberlist", members);
                 intent.putExtra("Selectdates", Dates);
                 startActivity(intent);
                 finish();
@@ -266,7 +262,6 @@ public class EmptyInsertMenu extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent(EmptyInsertMenu.this, EmptyTime.class);
         intent.putExtra("id", Userid);
         intent.putExtra("GroupName", TableName);
-        intent.putExtra("memberlist", members);
         intent.putExtra("Selectdates", Dates);
         startActivity(intent);
         super.onBackPressed();

@@ -30,7 +30,6 @@ import java.util.List;
 public class EmptyTimeDate extends AppCompatActivity {
 
     private String Userid, Tablename, MenuName, Dates;
-    private ArrayList<String> members;
     private int Starttime, Endtime;
 
     @Override
@@ -45,8 +44,6 @@ public class EmptyTimeDate extends AppCompatActivity {
     public void GetData(){
         //넘어온 데이터 받은 것.
         Intent intent = getIntent();
-
-        members = intent.getStringArrayListExtra("memberlist");
 
         MenuName = intent.getStringExtra("Menu");
         Tablename = intent.getStringExtra("GroupName");
@@ -153,7 +150,6 @@ public class EmptyTimeDate extends AppCompatActivity {
                             Intent intent = new Intent(EmptyTimeDate.this, GroupShcedule.class);
                             intent.putExtra("Time", SplitTime[i]);
                             intent.putExtra("id", Userid);
-                            intent.putStringArrayListExtra("memberlist", members);
                             intent.putExtra("GroupName", Tablename);
                             intent.putExtra("Selectdates", Dates);
                             intent.putExtra("Menu", MenuName);
@@ -174,7 +170,6 @@ public class EmptyTimeDate extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(EmptyTimeDate.this, EmptyTime.class);
         intent.putExtra("id",Userid);
-        intent.putStringArrayListExtra("memberlist",members);
         intent.putExtra("GroupName",Tablename);
         intent.putExtra("Selectdates", Dates);
         startActivity(intent);

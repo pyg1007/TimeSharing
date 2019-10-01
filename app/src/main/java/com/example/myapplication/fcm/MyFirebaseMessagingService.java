@@ -13,6 +13,7 @@ import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.example.myapplication.LogIn;
 import com.example.myapplication.R;
 import com.example.myapplication.Schedule;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -38,11 +39,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String content) {
-        Log.e("title :" , title);
         if(title == null)
             title = "기본 제목";
 
-        Intent intent = new Intent(this, Schedule.class);
+        Intent intent = new Intent(this, LogIn.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -72,6 +72,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder.setWhen(System.currentTimeMillis());
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setContentTitle(title);
+        builder.setContentIntent(pendingIntent);
         builder.setContentText(content);
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             // 아래 설정은 오레오부터 deprecated 되면서 NotificationChannel에서 동일 기능을 하는 메소드를 사용.

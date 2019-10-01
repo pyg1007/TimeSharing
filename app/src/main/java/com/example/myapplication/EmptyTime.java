@@ -41,7 +41,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
     private String Userid;
     private String Tablename;
 
-    private ArrayList<String> members;
     private String dates;
     private boolean flag;
 
@@ -58,7 +57,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         Userid = intent.getStringExtra("id");
         Tablename = intent.getStringExtra("GroupName");
-        members = intent.getStringArrayListExtra("memberlist");
         dates = intent.getStringExtra("Selectdates");
 
         new FirstMenu().execute();
@@ -83,7 +81,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
                 Intent intent = new Intent(EmptyTime.this, EmptyInsertMenu.class);
                 intent.putExtra("id",Userid);
                 intent.putExtra("GroupName",Tablename);
-                intent.putStringArrayListExtra("memberlist", members);
                 intent.putExtra("Selectdates", dates);
                 startActivity(intent);
                 finish();
@@ -210,7 +207,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
                         //되돌아올때
                         intent.putExtra("id",Userid);
                         intent.putExtra("GroupName", Tablename);
-                        intent.putStringArrayListExtra("memberlist", members);
                         intent.putExtra("Selectdates",dates);
                         //
                         intent.putExtra("Starttime", emptyItems.get(i).getStart());
@@ -237,7 +233,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
                                         flag = true;
                                         Intent intent = new Intent(EmptyTime.this, EmptyInsertMenu.class);
                                         intent.putExtra("id",Userid);
-                                        intent.putExtra("memberlist",members);
                                         intent.putExtra("Selectdates",dates);
                                         intent.putExtra("GroupName", Tablename);
                                         intent.putExtra("Menu",emptyItems.get(position).getMenu());
@@ -315,7 +310,6 @@ public class EmptyTime extends AppCompatActivity implements View.OnClickListener
         Intent intent = new Intent(EmptyTime.this, Group.class);
         intent.putExtra("id", Userid);
         intent.putExtra("GroupName", Tablename);
-        intent.putStringArrayListExtra("memberid", members);
         startActivity(intent);
         super.onBackPressed();
     }

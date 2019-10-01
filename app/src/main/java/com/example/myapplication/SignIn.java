@@ -74,9 +74,26 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
         user_id.setFilters(new InputFilter[]{idFilter});
         user_id.setHint("영어와 숫자만 사용가능합니다.");
+        user_id.setTextSize(15);
         user_password.setHint("8자리 이상을 입력해주세요.");
+        user_password.setTextSize(15);
         user_password_confirm.setHint("8자리 이상을 입력해주세요.");
+        user_password_confirm.setTextSize(15);
     }
+
+    /*
+    영어 숫자만 사용가능하게 제한 걸기
+     */
+    InputFilter idFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            if (source.toString().matches("^[0-9a-zA-Z]+$")) {
+                return source;
+            } else {
+                return "";
+            }
+        }
+    };
 
     public void EnterKey(){
         user_name.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -182,20 +199,6 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
     }
-
-    /*
-    영어 숫자만 사용가능하게 제한 걸기
-     */
-    InputFilter idFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[0-9a-zA-Z]+$")) {
-                return source;
-            } else {
-                return "";
-            }
-        }
-    };
 
     public class InsertData extends AsyncTask<String, Void, String> {
         @Override

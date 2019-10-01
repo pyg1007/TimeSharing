@@ -379,7 +379,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
         @Override
         protected String doInBackground(Void... voids) {
             try {
-
                 String link = "http://pyg941007.dothome.co.kr/load_schedule.php";
 
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
@@ -455,7 +454,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         int i = 0;
 
                         String dates = null;
-                        if(month < 10){
+                        if(month < 9){
                             dates = String.valueOf(year)+ "0" + String.valueOf(month+1) + String.valueOf(day);
                         }else{
                             dates = String.valueOf(year)+ String.valueOf(month+1) + String.valueOf(day);
@@ -479,7 +478,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 int i = 0;
 
                 String dates = null;
-                if(month < 10){
+                if(month < 9){
                     dates = String.valueOf(year)+ "0" + String.valueOf(month+1) + String.valueOf(day);
                 }else{
                     dates = String.valueOf(year)+ String.valueOf(month+1) + String.valueOf(day);

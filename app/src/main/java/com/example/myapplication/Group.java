@@ -76,7 +76,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
     private int _ID;
     private String Title, ID, Contents, Previoustime, Aftertime, savedate;
 
-    private ArrayList<String> members; // 넘어온 아이디 명단
     private List<MyItem> myItems; // 전체 스케쥴 리스트
     private List<MyItem> myItemList; // 동일날짜 보여주는 리스트
     private ArrayList<String> memberlist;
@@ -105,18 +104,12 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
 
         myItems = new ArrayList<>();
         myItemList = new ArrayList<>();
-        members = new ArrayList<>();
 
         Intent intent = getIntent();
         tablename = intent.getStringExtra("GroupName");
         userid = intent.getStringExtra("id");
-        members = intent.getStringArrayListExtra("memberid");
 
-        if(members == null){
-            new LookupMemeber().execute();
-        }else{
-            addmember();
-        }
+        new LookupMemeber().execute();
         new LookupRoomComment().execute();
         new JoinSchedule().execute();
     }
@@ -182,11 +175,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                 intent.putExtra("GroupName", tablename);
                 intent.putExtra("id", userid);
                 intent.putExtra("Invate_check", Invite_check);
-                if(members == null){
-                    intent.putStringArrayListExtra("memberid", memberlist);
-                }else{
-                    intent.putStringArrayListExtra("memberid", members);
-                }
                 startActivity(intent);
                 finish();
                 break;
@@ -236,16 +224,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         return super.onOptionsItemSelected(item);
     }
 
-    public void addmember(){
-        try {
-            for (int i = 0; i < members.size(); i++) {
-                new Groupadd().execute(members.get(i));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void Calandar_init(){
         materialCalendarView = findViewById(R.id.calendarView);
 
@@ -281,80 +259,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
         DateTextView.setGravity(Gravity.CENTER);
         DateTextView.setTextSize(20);
         DateTextView.setText(date.getYear() + "년" + (date.getMonth()+1) + "월");
-    }
-
-    public class Groupadd extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... Strings) {
-            try {
-
-                String link = "http://pyg941007.dothome.co.kr/groupadd.php";
-                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(tablename, "UTF-8");
-                data += "&" + URLEncoder.encode("memberid", "UTF-8") + "=" + URLEncoder.encode(Strings[0], "UTF-8");
-
-                URL url = new URL(link);
-
-                URLConnection conn = url.openConnection();
-
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-
-                wr.write(data);
-                wr.flush();
-
-                InputStream inputStream = conn.getInputStream();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String temp;
-
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((temp = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(temp + "\n");
-                }
-
-                bufferedReader.close();
-                inputStream.close();
-                wr.close();
-                return  stringBuilder.toString().trim();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            ListView listView = findViewById(R.id.list);
-            Collections.sort(members, comAsc);
-            ArrayAdapter arrayAdapter = new ArrayAdapter(Group.this, android.R.layout.simple_list_item_1, members);
-            listView.setAdapter(arrayAdapter);
-
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(Group.this, EmptyTime.class);
-                    CalendarDay c = materialCalendarView.getSelectedDate();
-                    int month = c.getMonth()+1;
-                    String zeromonth = null;
-                    if(month<10){
-                        zeromonth = "0"+month;
-                    }else{
-                        zeromonth = String.valueOf(month);
-                    }
-                    String dates = String.valueOf(c.getYear()) + zeromonth + c.getDay();
-                    intent.putExtra("id", userid);
-                    intent.putExtra("GroupName", tablename);
-                    intent.putStringArrayListExtra("memberlist", members);
-                    intent.putExtra("Selectdates", dates);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-            FirebaseMessaging.getInstance().subscribeToTopic(tablename);
-        }
     }
 
     public class JoinSchedule extends AsyncTask<Void, Void, String>{
@@ -444,7 +348,7 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                         int day = date.getDay();
 
                         String dates = null;
-                        if (month < 10) {
+                        if (month < 9) {
                             dates = String.valueOf(year) + "0" + String.valueOf(month + 1) + String.valueOf(day);
                         } else {
                             dates = String.valueOf(year) + String.valueOf(month + 1) + String.valueOf(day);
@@ -589,7 +493,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                         intent.putExtra("id", userid);
                         intent.putExtra("GroupName", tablename);
                         intent.putExtra("Selectdates",dates);
-                        intent.putStringArrayListExtra("memberlist", memberlist);
                         startActivity(intent);
                         finish();
                     }

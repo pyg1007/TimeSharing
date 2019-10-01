@@ -7,8 +7,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +19,8 @@ import android.widget.Toast;
 
 import com.example.myapplication.CustomAdapterItem.User;
 import com.example.myapplication.CustomAdapter.UserListAdapter;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +33,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Memberlist extends AppCompatActivity implements View.OnClickListener{
@@ -84,7 +90,8 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
     public void makedialog(View view){
         final EditText et = new EditText(Memberlist.this);
-        et.setHint("영어로만 가능합니다. 숫자와 특수문자는 자동제거됩니다.");
+        et.setHint("영어로만 가능합니다.");
+        et.setFilters(new InputFilter[]{RoomNameFilter});
         final TextView Idtext = view.findViewById(R.id.Id);
         Members.add(Idtext.getText().toString());
         AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
@@ -114,17 +121,26 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                 if (Tablename.equals("")){
                     Toast.makeText(Memberlist.this, "방제목을 입력해 주세요.", Toast.LENGTH_SHORT).show();
                 }else {
-                    Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}", ""); // 숫자와 특수문자 제거
-                    if (Tablename.getBytes().length == Tablename.length()) {
-                        new Tablecreate().execute();
-                        dialog.dismiss();
-                    } else if (Tablename.getBytes().length == 3 * Tablename.length()) {
-                        Toast.makeText(Memberlist.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
-                    }
+                    new Tablecreate().execute();
+                    dialog.dismiss();
                 }
             }
         });
     }
+
+    /*
+    영어만 사용가능하게 제한 걸기
+     */
+    InputFilter RoomNameFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            if (source.toString().matches("^[a-zA-Z]+$")) {
+                return source;
+            } else {
+                return "";
+            }
+        }
+    };
 
     public class ShowMemberList extends AsyncTask<Void, Void, String> {
 
@@ -262,10 +278,10 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
                     Intent intent = new Intent(Memberlist.this, Group.class);
                     for (int count = 0; count < Members.size(); count++) {
                         new Insertdata().execute(Members.get(count));
+                        new Groupadd().execute(Members.get(count));
                     }
                     intent.putExtra("GroupName", Tablename);
                     intent.putExtra("id", userid);
-                    intent.putStringArrayListExtra("memberid", Members);
                     startActivity(intent);
                     finish();
                 }
@@ -403,6 +419,53 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+    public class Groupadd extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... Strings) {
+            try {
+
+                String link = "http://pyg941007.dothome.co.kr/groupadd.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+                data += "&" + URLEncoder.encode("memberid", "UTF-8") + "=" + URLEncoder.encode(Strings[0], "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //FirebaseMessaging.getInstance().subscribeToTopic(Tablename);
+        }
+    }
 
     @Override
     public void onBackPressed() {

@@ -6,15 +6,20 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.CustomAdapter.CheckboxListAdapter;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CheckboxList extends AppCompatActivity implements View.OnClickListener{
@@ -62,15 +68,11 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         userid = intent.getStringExtra("id");
         flag = intent.getBooleanExtra("Invate_check",false);
         if (flag){
-            members = intent.getStringArrayListExtra("memberid");
             Tablename = intent.getStringExtra("GroupName");
-            for (int i =0; i<members.size();i++){
-                members_copy.add(members.get(i));
-            }
+            new GroupGetMember().execute();
         }else{
             members.add(userid);
         }
-
         new GetMemeber().execute(userid);
     }
 
@@ -89,9 +91,9 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(CheckboxList.this, Group.class);
                         for (int i = 0; i < members.size(); i++) {
                             new Insertdata().execute(members.get(i));
+                            new Groupadd().execute(members.get(i));
                         }
                         intent.putExtra("id", userid);
-                        intent.putStringArrayListExtra("memberid", members);
                         intent.putExtra("GroupName", Tablename);
                         startActivity(intent);
                         finish();
@@ -101,7 +103,8 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 }else{
                     if (members.size()>1) {
                         final EditText editText = new EditText(CheckboxList.this);
-                        editText.setHint("영어로만 가능합니다. 숫자와 특수문자는 자동제거됩니다.");
+                        editText.setHint("영어로만 가능합니다.");
+                        editText.setFilters(new InputFilter[]{RoomNameFilter});
                         AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
                         ad.setTitle("그룹명")
                                 .setMessage("그룹명을 입력해 주세요.")
@@ -128,14 +131,8 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                                 if (Tablename.equals("")){
                                     Toast.makeText(CheckboxList.this, "방 이름을 설정해주세요.", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    Tablename = Tablename.replaceAll("\\p{Digit}|\\p{Punct}",""); // 숫자와 특수문자 제거
-                                    if(Tablename.getBytes().length == Tablename.length()) {
-                                        new Tablecreate().execute();
-                                        dialog.dismiss();
-                                    }
-                                    else if(Tablename.getBytes().length == 3 * Tablename.length()){
-                                        Toast.makeText(CheckboxList.this, "한글로는 방을 만들수 없습니다.", Toast.LENGTH_SHORT).show();
-                                    }
+                                    new Tablecreate().execute();
+                                    dialog.dismiss();
                                 }
                             }
                         });
@@ -147,6 +144,20 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    /*
+    영어만 사용가능하게 제한 걸기
+     */
+    InputFilter RoomNameFilter = new InputFilter() {
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            if (source.toString().matches("^[a-zA-Z]+$")) {
+                return source;
+            } else {
+                return "";
+            }
+        }
+    };
 
     public class GetMemeber extends AsyncTask<String, Void, String>{
 
@@ -242,6 +253,70 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
+    }
+
+    public class GroupGetMember extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/Group_LoadMember.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+                bufferedReader.close();
+                inputStream.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+
+                JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
+                int count = 0;
+
+                String userID;
+
+                while (count < jsonArray.length()) {
+                    JSONObject object = jsonArray.getJSONObject(count);
+
+                    userID = object.getString("id");
+
+                    members.add(userID);
+                    members_copy.add(userID);
+                    count++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public class Insertdata extends AsyncTask<String, Void, String>{
@@ -342,17 +417,66 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(CheckboxList.this, "그룹생성 성공", Toast.LENGTH_SHORT).show();
                     for (int count = 0; count < members.size(); count++) {
                         new Insertdata().execute(members.get(count));
+                        new Groupadd().execute(members.get(count));
                     }
                     Intent intent = new Intent(CheckboxList.this, Group.class);
                     intent.putExtra("GroupName", Tablename);
                     intent.putExtra("id", userid);
-                    intent.putStringArrayListExtra("memberid", members);
                     startActivity(intent);
                     finish();
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class Groupadd extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... Strings) {
+            try {
+
+                String link = "http://pyg941007.dothome.co.kr/groupadd.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(Tablename, "UTF-8");
+                data += "&" + URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(Strings[0], "UTF-8");
+
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = conn.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                wr.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.e("TAG : ", result);
+            //FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
     }
 
@@ -367,7 +491,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, Group.class);
             intent.putExtra("id", userid);
             intent.putExtra("GroupName", Tablename);
-            intent.putExtra("memberid",members);
             startActivity(intent);
             super.onBackPressed();
         }

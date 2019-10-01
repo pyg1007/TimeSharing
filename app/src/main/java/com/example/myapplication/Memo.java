@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -80,6 +79,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         flag = intent.getBooleanExtra("flag",false);
         if (month < 10) {
             Zero_Add_Month = "0" + String.valueOf(month);
+        }else{
+            Zero_Add_Month = ""+ month;
         }
         Savedate = String.valueOf(year) + Zero_Add_Month + String.valueOf(day);
         userid = intent.getStringExtra("id");
@@ -241,6 +242,8 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             String Month = null;
             if(month < 9){
                 Month = "0" + (month+1);
+            }else{
+                Month = "" + (month+1);
             }
             Savedate = ""+ year + Month + day;
         }
