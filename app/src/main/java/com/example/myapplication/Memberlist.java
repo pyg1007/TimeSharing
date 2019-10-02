@@ -463,7 +463,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            //FirebaseMessaging.getInstance().subscribeToTopic(Tablename);
         }
     }
 

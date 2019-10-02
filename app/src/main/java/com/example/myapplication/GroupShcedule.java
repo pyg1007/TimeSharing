@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -50,9 +51,11 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_shcedule);
 
-        new GroupGetMember().execute();
         GetData();
         UI();
+
+        new GroupGetMember().execute();
+        //new GetUUID().execute();
     }
 
     public void GetData(){
@@ -143,7 +146,6 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                 Intent intent = new Intent(GroupShcedule.this, EmptyTimeDate.class);
                 intent.putExtra("id", Userid);
                 intent.putExtra("GroupName", TableName);
-                intent.putStringArrayListExtra("memberlist", members);
                 intent.putExtra("Selectdates", dates);
                 intent.putExtra("Starttime", init_Start);
                 intent.putExtra("Endtime", init_End);
@@ -169,7 +171,6 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                     }
                     sendPostFCM();
                     Intent group = new Intent(GroupShcedule.this, Group.class);
-                    group.putStringArrayListExtra("memberid", members);
                     group.putExtra("id", Userid);
                     group.putExtra("GroupName", TableName);
                     startActivity(group);
@@ -353,6 +354,51 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+        }
+    }
+
+    public class GetUUID extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = "http://pyg941007.dothome.co.kr/JoinUUID.php";
+                String data = URLEncoder.encode("tablename", "UTF-8") + "=" + URLEncoder.encode(TableName, "UTF-8");
+                URL url = new URL(link);
+
+                URLConnection urlConnection = url.openConnection();
+
+                urlConnection.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+
+                wr.write(data);
+                wr.flush();
+
+                InputStream inputStream = urlConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String temp;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((temp = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(temp + "\n");
+                }
+
+                wr.close();
+                bufferedReader.close();
+                inputStream.close();
+                return  stringBuilder.toString().trim();
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("TAG : ", s);
         }
     }
 

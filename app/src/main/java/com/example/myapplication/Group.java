@@ -489,7 +489,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
                             zeromonth = String.valueOf(month);
                         }
                         String dates = String.valueOf(c.getYear()) + zeromonth + c.getDay();
-                        Log.e("dates :", dates);
                         intent.putExtra("id", userid);
                         intent.putExtra("GroupName", tablename);
                         intent.putExtra("Selectdates",dates);
@@ -500,8 +499,8 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
-
     }
 
     public class UpdateRoomComment extends AsyncTask<String, Void, String>{

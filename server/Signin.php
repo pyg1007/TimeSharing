@@ -11,10 +11,11 @@
     $userid = $_POST['userid'];
     $userpw = $_POST['userpassword'];
     $userintroduce = $_POST['userintroduce'];
+    $uuid = $_POST['uuid'];
     $username = $_POST['username'];
     $id = "person".$userid;
 
-    $result  = mysqli_query($con, "INSERT INTO USER ( userid, userpassword , username, userintroduce) VALUES ('$userid', '$userpw','$username', '$userintroduce')");
+    $result  = mysqli_query($con, "INSERT INTO USER ( userid, userpassword , username, userintroduce, uuid) VALUES ('$userid', '$userpw','$username', '$userintroduce', '$uuid')");
 
     $tablecreate = mysqli_query($con, "CREATE TABLE $id (tablename VARCHAR(50) NOT NULL, PRIMARY KEY(tablename))");
 

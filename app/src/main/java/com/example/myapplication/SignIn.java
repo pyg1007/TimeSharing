@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -221,6 +223,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 data += "&" + URLEncoder.encode("userpassword", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
                 data += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
                 data += "&" + URLEncoder.encode("userintroduce", "UTF-8") + "=" + URLEncoder.encode(strings[2] + "입니다.", "UTF-8");
+                data += "&" + URLEncoder.encode("uuid", "UTF-8") + "=" + URLEncoder.encode(FirebaseInstanceId.getInstance().getToken(), "UTF-8");
 
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();

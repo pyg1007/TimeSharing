@@ -245,9 +245,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 checkboxListAdapter.notifyDataSetChanged();
                 if(checkboxListAdapter.ischeck(position)){
                     members.add(parent.getItemAtPosition(position).toString());
-                    Log.e("size : ", String.valueOf(members.size()));
-                    if(flag)
-                        Log.e("copy size : ", String.valueOf(members_copy.size()));
                 }else{
                     members.remove(parent.getItemAtPosition(position).toString());
                 }
@@ -475,8 +472,6 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e("TAG : ", result);
-            //FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
     }
 

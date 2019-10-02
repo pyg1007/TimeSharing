@@ -287,13 +287,11 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-            Log.e(" Error : ", s);
         }
 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Log.e("Savedata : ", Savedate);
                 String link = "http://pyg941007.dothome.co.kr/Insert_schedule.php";
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userid, "UTF-8");
                 data += "&" + URLEncoder.encode("title", "UTF-8") + "=" + URLEncoder.encode(Title, "UTF-8");
