@@ -29,6 +29,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GroupShcedule extends AppCompatActivity implements View.OnClickListener{
 
@@ -46,6 +47,10 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
     private EditText TitleEdit;
     private EditText ContentsEdit;
 
+    private TextView Memodate;
+
+    private String[] GET_UUID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +60,7 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         UI();
 
         new GroupGetMember().execute();
-        //new GetUUID().execute();
+        new GetUUID().execute();
     }
 
     public void GetData(){
@@ -90,6 +95,9 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         TitleEdit = findViewById(R.id.memo_title);
         ContentsEdit = findViewById(R.id.memo_contents);
         TitleEdit.setText(MenuName);
+        Memodate = findViewById(R.id.memo_date);
+        Memodate.setText(dates.substring(0,4) + "년" + dates.substring(4,6) + "월" + dates.substring(6) + "일");
+        Memodate.setGravity(Gravity.CENTER);
 
         Spinner();
         EnterKey();
@@ -334,6 +342,7 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                 System.out.println("\nSending 'POST' request to URL : " + url);
                 System.out.println("Post parameters : " + json.toString().getBytes("UTF-8"));
                 System.out.println("Response Code : " + responseCode);
+                Log.e("JSON : ", String.valueOf(json));
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String inputLine;
@@ -398,7 +407,28 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("TAG : ", s);
+            try {
+                JSONObject jsonObject = new JSONObject(s);
+
+                JSONArray jsonArray = jsonObject.getJSONArray("webnautes");
+                int count = 0;
+
+                String UUID = null;
+                GET_UUID = new String[members.size()];
+
+                while (count < jsonArray.length()) {
+                    JSONObject object = jsonArray.getJSONObject(count);
+
+                    UUID = object.getString("uuid");
+
+                    GET_UUID[count] = UUID;
+
+                    count++;
+                }
+                Log.e("jsonarray:", Arrays.toString(GET_UUID));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
