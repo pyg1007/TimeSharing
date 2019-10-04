@@ -10,12 +10,17 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.myapplication.LogIn;
 import com.example.myapplication.R;
 import com.example.myapplication.Schedule;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -24,7 +29,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String s) {
         super.onNewToken(s);
-        Log.e("Token :" ,s);
+
+        sendRegistrationToServer(s);
     }
 
     @Override
@@ -36,6 +42,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         wakeLock.acquire(3000);
         sendNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("body"));
         wakeLock.release();
+    }
+
+    private void sendRegistrationToServer(String token) {
+        // TODO: Implement this method to send token to your app server.
     }
 
     private void sendNotification(String title, String content) {

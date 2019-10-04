@@ -12,14 +12,15 @@
     $table = $_POST['tablename'];
     $tablename = "shareroom".$table;
 
-   
-    $result  = mysqli_query($con, "INSERT INTO $tablename (userid) VALUES ('$userid')");
+    $check = mysqli_query($con, "SELECT * FROM $tablename WHERE userid = '$userid'");
 
-    if($result){
-        echo 'success';
+    $row = mysqli_num_rows($check);
+
+    if($row > 0){
+        echo $row;
     }else{
-        echo "failure";
-    }   
+        $result  = mysqli_query($con, "INSERT INTO $tablename (userid) VALUES ('$userid')");
+    }
 
     mysqli_close($con);
 ?>

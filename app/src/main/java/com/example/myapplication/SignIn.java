@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,7 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -44,6 +49,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
     private Button Id_duplicate;
 
     private boolean Id_Check = false;
+    private String token;
 
     private RelativeLayout relativeLayout;
     private InputMethodManager imm;
@@ -57,6 +63,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         HideKeyboard();
         RealTimePWCheck();
         EnterKey();
+        getToken();
     }
 
     public void UI(){
@@ -81,6 +88,19 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         user_password.setTextSize(15);
         user_password_confirm.setHint("8자리 이상을 입력해주세요.");
         user_password_confirm.setTextSize(15);
+    }
+
+    public void getToken(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()){
+                    Log.w("TAG", "getInstanceId failed", task.getException());
+                    return;
+                }
+                token = task.getResult().getToken();
+            }
+        });
     }
 
     /*
@@ -223,7 +243,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 data += "&" + URLEncoder.encode("userpassword", "UTF-8") + "=" + URLEncoder.encode(strings[1], "UTF-8");
                 data += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(strings[2], "UTF-8");
                 data += "&" + URLEncoder.encode("userintroduce", "UTF-8") + "=" + URLEncoder.encode(strings[2] + "입니다.", "UTF-8");
-                data += "&" + URLEncoder.encode("uuid", "UTF-8") + "=" + URLEncoder.encode(FirebaseInstanceId.getInstance().getToken(), "UTF-8");
+                data += "&" + URLEncoder.encode("uuid", "UTF-8") + "=" + URLEncoder.encode(token, "UTF-8");
 
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();

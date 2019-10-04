@@ -475,6 +475,8 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     @Override
     public void onBackPressed() {
         if (!flag) {

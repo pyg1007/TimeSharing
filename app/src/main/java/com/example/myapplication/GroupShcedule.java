@@ -30,6 +30,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class GroupShcedule extends AppCompatActivity implements View.OnClickListener{
 
@@ -49,7 +50,7 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
 
     private TextView Memodate;
 
-    private String[] GET_UUID;
+    private List<String> getUUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,7 +307,9 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
     }
 
     public void sendPostFCM(){
-        new Send().execute();
+        for (int i = 0; i<getUUID.size(); i++) {
+            new Send().execute(getUUID.get(i));
+        }
     }
 
     public class Send extends AsyncTask<String, Void, String>{
@@ -327,10 +330,10 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
 
                 JSONObject info = new JSONObject();
                 info.put("title" , TableName + "에서 온 메세지");
-                info.put("body", ""+Userid + "님이"+setting_Start + " ~ " + setting_End + "시간에 " + TitleEdit.getText().toString() + "으로 등록하셨습니다.");
+                info.put("body", ""+Userid + "님이" + setting_Start + " ~ " + setting_End + "시간에 " + TitleEdit.getText().toString() + "으로 등록하셨습니다.");
 
                 JSONObject json = new JSONObject();
-                json.put("to", "/topics/" + TableName);
+                json.put("to", strings[0]);
                 json.put("data", info);
 
                 OutputStream os = urlConnection.getOutputStream();
@@ -355,7 +358,7 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
 
                 return response.toString();
             }catch (Exception e){
-
+                e.printStackTrace();
             }
             return null;
         }
@@ -363,8 +366,74 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            try {
+                Log.e("response : ", s);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
+
+    public class Getnotification_key extends AsyncTask<String, Void, String>{
+
+        private String APIKey = "AAAADqP_LKw:APA91bHYjTJOSQkbX9mz1Zgcfwu00meC8O-p-MwXyptZ57Xtwv1rIqWL-DBjmlYrwpxIjJOQp9WKq6NtF49OlOX4At4dRiyIEgrigmlgvL_BeC43BG91sYDd37Rwyh0oK41NR9s7S1e7";
+        private String ServerHttps = "https://fcm.googleapis.com/fcm/notification";
+        private String SenderID = "62880951468";
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try{
+                URL url = new URL(ServerHttps);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Authorization", "key=" + APIKey);
+                urlConnection.setRequestProperty("project_id", SenderID);
+
+                JSONObject json = new JSONObject();
+                json.put("operation", "create");
+                json.put("notification_key_name",TableName);
+                json.put("registration_ids", new JSONArray(getUUID));
+
+                OutputStream os = urlConnection.getOutputStream();
+                os.write(json.toString().getBytes("UTF-8"));
+                os.flush();
+                os.close();
+
+                int responseCode = urlConnection.getResponseCode();
+                System.out.println("\nSending 'POST' request to URL : " + url);
+                System.out.println("Post parameters : " + json.toString().getBytes("UTF-8"));
+                System.out.println("Response Code : " + responseCode);
+                Log.e("JSON : ", String.valueOf(json.toString()));
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                return response.toString();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                Log.e("response : ", s);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    } // 이건지금안씀 해볼려고하는중
 
     public class GetUUID extends AsyncTask<String, Void, String>{
         @Override
@@ -414,18 +483,17 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                 int count = 0;
 
                 String UUID = null;
-                GET_UUID = new String[members.size()];
+                getUUID = new ArrayList<>();
 
                 while (count < jsonArray.length()) {
                     JSONObject object = jsonArray.getJSONObject(count);
 
                     UUID = object.getString("uuid");
 
-                    GET_UUID[count] = UUID;
-
+                    getUUID.add(UUID);
                     count++;
                 }
-                Log.e("jsonarray:", Arrays.toString(GET_UUID));
+                new Getnotification_key().execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }

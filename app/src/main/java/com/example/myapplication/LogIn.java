@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +53,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
 
     private String userID;
     private String userPW;
+    private String token;
 
 
     @Override
@@ -59,6 +64,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
         UI();
         HideKeyboard();
         EnterKey();
+        getToken();
     }
 
     public void UI(){
@@ -124,6 +130,19 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
                 finish();
                 break;
         }
+    }
+
+    public void getToken(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()){
+                    Log.w("TAG", "getInstanceId failed", task.getException());
+                    return;
+                }
+                token = task.getResult().getToken();
+            }
+        });
     }
 
     public class Login_task extends AsyncTask<String, Void, String> {
@@ -237,7 +256,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
 
                     count++;
                 }
-                if (!UUID.equals(FirebaseInstanceId.getInstance().getToken())){
+                if (!UUID.equals(token)){
                     new UpdateUUID().execute();
                 }
             } catch (Exception e) {
@@ -252,7 +271,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
             try {
                 String link = "http://pyg941007.dothome.co.kr/UpdateToken.php";
                 String data = URLEncoder.encode("userid", "UTF-8") + "=" + URLEncoder.encode(userID, "UTF-8");
-                data += "&" + URLEncoder.encode("uuid", "UTF-8") + "=" + URLEncoder.encode(FirebaseInstanceId.getInstance().getToken(), "UTF-8");
+                data += "&" + URLEncoder.encode("uuid", "UTF-8") + "=" + URLEncoder.encode(token, "UTF-8");
 
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();
