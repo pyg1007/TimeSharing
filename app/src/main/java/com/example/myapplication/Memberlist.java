@@ -90,7 +90,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
 
     public void makedialog(View view){
         final EditText et = new EditText(Memberlist.this);
-        et.setHint("영어로만 가능합니다.");
+        et.setHint("특수문자는 불가능합니다.");
         et.setFilters(new InputFilter[]{RoomNameFilter});
         final TextView Idtext = view.findViewById(R.id.Id);
         Members.add(Idtext.getText().toString());
@@ -128,13 +128,11 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
         });
     }
 
-    /*
-    영어만 사용가능하게 제한 걸기
-     */
+
     InputFilter RoomNameFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[a-zA-Z]+$")) {
+            if (source.toString().matches("^[a-zA-Z0-9ㄱ-ㅣ가-힣]+$")) {
                 return source;
             } else {
                 return "";

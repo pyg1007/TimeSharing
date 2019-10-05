@@ -20,7 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="asdfasdf"
             android:textSize="16dp" />
 
     </RelativeLayout>
@@ -75,7 +74,7 @@
 
         <EditText
             android:id="@+id/pw"
-            android:layout_width="100dp"
+            android:layout_width="213dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_toRightOf="@+id/PW_textview"
@@ -84,7 +83,7 @@
 
         <EditText
             android:id="@+id/pw_chk"
-            android:layout_width="100dp"
+            android:layout_width="213dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pw"
             android:layout_alignLeft="@+id/pw"

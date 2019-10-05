@@ -29,7 +29,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GroupShcedule extends AppCompatActivity implements View.OnClickListener{
@@ -172,8 +171,8 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                 else if (ContentsEdit.getText().toString().equals("")){
                     Toast.makeText(this, "내용을 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
-                else if (set_Start>set_End){
-                    Toast.makeText(this, "시작시간이 마지막시간보다 더 큽니다.", Toast.LENGTH_SHORT).show();
+                else if (set_Start>=set_End){
+                    Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
                 }else {
                     for (int i = 0; i < members.size(); i++) {
                         new GroupMemberScheduleIn().execute(members.get(i), TitleEdit.getText().toString(), ContentsEdit.getText().toString());
@@ -374,66 +373,127 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public class Getnotification_key extends AsyncTask<String, Void, String>{
-
-        private String APIKey = "AAAADqP_LKw:APA91bHYjTJOSQkbX9mz1Zgcfwu00meC8O-p-MwXyptZ57Xtwv1rIqWL-DBjmlYrwpxIjJOQp9WKq6NtF49OlOX4At4dRiyIEgrigmlgvL_BeC43BG91sYDd37Rwyh0oK41NR9s7S1e7";
-        private String ServerHttps = "https://fcm.googleapis.com/fcm/notification";
-        private String SenderID = "62880951468";
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try{
-                URL url = new URL(ServerHttps);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoInput(true);
-                urlConnection.setDoOutput(true);
-                urlConnection.setRequestMethod("POST");
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestProperty("Authorization", "key=" + APIKey);
-                urlConnection.setRequestProperty("project_id", SenderID);
-
-                JSONObject json = new JSONObject();
-                json.put("operation", "create");
-                json.put("notification_key_name",TableName);
-                json.put("registration_ids", new JSONArray(getUUID));
-
-                OutputStream os = urlConnection.getOutputStream();
-                os.write(json.toString().getBytes("UTF-8"));
-                os.flush();
-                os.close();
-
-                int responseCode = urlConnection.getResponseCode();
-                System.out.println("\nSending 'POST' request to URL : " + url);
-                System.out.println("Post parameters : " + json.toString().getBytes("UTF-8"));
-                System.out.println("Response Code : " + responseCode);
-                Log.e("JSON : ", String.valueOf(json.toString()));
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                return response.toString();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            try {
-                Log.e("response : ", s);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    } // 이건지금안씀 해볼려고하는중
+//    public class Getnotification_key extends AsyncTask<String, Void, String>{
+//
+//        private String APIKey = "AAAADqP_LKw:APA91bHYjTJOSQkbX9mz1Zgcfwu00meC8O-p-MwXyptZ57Xtwv1rIqWL-DBjmlYrwpxIjJOQp9WKq6NtF49OlOX4At4dRiyIEgrigmlgvL_BeC43BG91sYDd37Rwyh0oK41NR9s7S1e7";
+//        private String ServerHttps = "https://fcm.googleapis.com/fcm/notification";
+//        private String SenderID = "62880951468";
+//
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            try{
+//                URL url = new URL(ServerHttps);
+//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setDoInput(true);
+//                urlConnection.setDoOutput(true);
+//                urlConnection.setRequestMethod("POST");
+//                urlConnection.setRequestProperty("Content-Type", "application/json");
+//                urlConnection.setRequestProperty("Authorization", "key=" + APIKey);
+//                urlConnection.setRequestProperty("project_id", SenderID);
+//
+//                JSONObject json = new JSONObject();
+//                json.put("operation", "create");
+//                json.put("notification_key_name",TableName);
+//                json.put("registration_ids", new JSONArray(getUUID));
+//
+//                OutputStream os = urlConnection.getOutputStream();
+//                os.write(json.toString().getBytes("UTF-8"));
+//                os.flush();
+//                os.close();
+//
+//                int responseCode = urlConnection.getResponseCode();
+//                System.out.println("\nSending 'POST' request to URL : " + url);
+//                System.out.println("Post parameters : " + json.toString().getBytes("UTF-8"));
+//                System.out.println("Response Code : " + responseCode);
+//                Log.e("JSON : ", String.valueOf(json.toString()));
+//
+//                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+//                String inputLine;
+//                StringBuffer response = new StringBuffer();
+//
+//                while ((inputLine = in.readLine()) != null) {
+//                    response.append(inputLine);
+//                }
+//                in.close();
+//
+//                return response.toString();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            super.onPostExecute(s);
+//            try {
+//                Log.e("response : ", s);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//    } // 이건지금안씀 해볼려고하는중
+//
+//    public class AddNotification extends AsyncTask<String, Void, String>{
+//        private String APIKey = "AAAADqP_LKw:APA91bHYjTJOSQkbX9mz1Zgcfwu00meC8O-p-MwXyptZ57Xtwv1rIqWL-DBjmlYrwpxIjJOQp9WKq6NtF49OlOX4At4dRiyIEgrigmlgvL_BeC43BG91sYDd37Rwyh0oK41NR9s7S1e7";
+//        private String ServerHttps = "https://fcm.googleapis.com/fcm/notification";
+//        private String SenderID = "62880951468";
+//
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            try{
+//                URL url = new URL(ServerHttps);
+//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setDoInput(true);
+//                urlConnection.setDoOutput(true);
+//                urlConnection.setRequestMethod("POST");
+//                urlConnection.setRequestProperty("Content-Type", "application/json");
+//                urlConnection.setRequestProperty("Authorization", "key=" + APIKey);
+//                urlConnection.setRequestProperty("project_id", SenderID);
+//
+//                JSONObject json = new JSONObject();
+//                json.put("operation", "add");
+//                json.put("notification_key_name",TableName);
+//                json.put("notification_key", "APA91bFom5THRyRpsaRb-YU8okRWd5LjNvZ3YixO6YRPKSJyJB7OY8LM3DcqfuF9kxVCsQ30lPAwyZ4Df4GmjGn9XbsS9_VzcCTUqs4K1YH9tWnYWx8tqi0");
+//                json.put("registration_ids", new JSONArray(getUUID));
+//
+//                OutputStream os = urlConnection.getOutputStream();
+//                os.write(json.toString().getBytes("UTF-8"));
+//                os.flush();
+//                os.close();
+//
+//                int responseCode = urlConnection.getResponseCode();
+//                System.out.println("\nSending 'POST' request to URL : " + url);
+//                System.out.println("Post parameters : " + json.toString().getBytes("UTF-8"));
+//                System.out.println("Response Code : " + responseCode);
+//                Log.e("JSON : ", String.valueOf(json.toString()));
+//
+//                BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+//                String inputLine;
+//                StringBuffer response = new StringBuffer();
+//
+//                while ((inputLine = in.readLine()) != null) {
+//                    response.append(inputLine);
+//                }
+//                in.close();
+//
+//                return response.toString();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            super.onPostExecute(s);
+//            try {
+//                Log.e("response : ", s);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public class GetUUID extends AsyncTask<String, Void, String>{
         @Override
@@ -493,7 +553,7 @@ public class GroupShcedule extends AppCompatActivity implements View.OnClickList
                     getUUID.add(UUID);
                     count++;
                 }
-                new Getnotification_key().execute();
+               // new Getnotification_key().execute();
             } catch (Exception e) {
                 e.printStackTrace();
             }

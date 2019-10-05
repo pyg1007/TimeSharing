@@ -258,7 +258,7 @@ public class Memo extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show();
         } else if (Contents.equals("")) {
             Toast.makeText(this, "내용을 입력해 주세요.", Toast.LENGTH_SHORT).show();
-        } else if(StartTime > EndTime){
+        } else if(StartTime >= EndTime){
             Toast.makeText(this, "시간을 다시 설정해 주세요.", Toast.LENGTH_SHORT).show();
         } else{
             new InsertToSchedule().execute();

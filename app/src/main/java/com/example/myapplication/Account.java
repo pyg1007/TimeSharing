@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -80,7 +79,9 @@ public class Account extends AppCompatActivity implements View.OnClickListener{
         TextLengthChk = findViewById(R.id.length_check);
         Account_edit = findViewById(R.id.account);
         Pw.setHint("8자이상 입력하세요.");
+        Pw.setTextSize(15);
         Pw_chk.setHint("8자이상 입력하세요.");
+        Pw_chk.setTextSize(15);
 
         confirm = findViewById(R.id.confirm);
         cancel = findViewById(R.id.cancel);

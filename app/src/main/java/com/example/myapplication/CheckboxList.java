@@ -103,7 +103,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                 }else{
                     if (members.size()>1) {
                         final EditText editText = new EditText(CheckboxList.this);
-                        editText.setHint("영어로만 가능합니다.");
+                        editText.setHint("특수문자는 불가능합니다.");
                         editText.setFilters(new InputFilter[]{RoomNameFilter});
                         AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
                         ad.setTitle("그룹명")
@@ -146,12 +146,12 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
     }
 
     /*
-    영어만 사용가능하게 제한 걸기
+    특수문자만 불가능
      */
     InputFilter RoomNameFilter = new InputFilter() {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[a-zA-Z]+$")) {
+            if (source.toString().matches("^[a-zA-Z0-9ㄱ-ㅣ가-힣]+$")) {
                 return source;
             } else {
                 return "";

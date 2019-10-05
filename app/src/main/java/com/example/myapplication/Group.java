@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,7 +37,6 @@ import com.example.myapplication.Loading.LodingProgress;
 import com.example.myapplication.CustomAdapterItem.MyItem;
 import com.example.myapplication.CustomAdapterItem.ShareData;
 import com.example.myapplication.CustomAdapterItem.ShareItem;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -499,7 +497,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            FirebaseMessaging.getInstance().subscribeToTopic(tablename);
         }
     }
 
@@ -671,8 +668,6 @@ public class Group extends AppCompatActivity implements NavigationView.OnNavigat
             intent.putExtra("id", userid);
             startActivity(intent);
             finish();
-
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(tablename);
         }
     }
 
