@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,8 +17,7 @@ import android.widget.Toast;
 
 import com.example.myapplication.CustomAdapterItem.User;
 import com.example.myapplication.CustomAdapter.UserListAdapter;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.example.myapplication.inputfilter.NonSpecialCharactersFilter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +30,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Memberlist extends AppCompatActivity implements View.OnClickListener{
@@ -46,6 +42,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
     private List<User> userList;
     private FloatingActionButton floatingActionButton;
     private ArrayList<String> Members;
+
 
 
     @Override
@@ -91,7 +88,7 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
     public void makedialog(View view){
         final EditText et = new EditText(Memberlist.this);
         et.setHint("특수문자는 불가능합니다.");
-        et.setFilters(new InputFilter[]{RoomNameFilter});
+        et.setFilters(new InputFilter[]{new NonSpecialCharactersFilter()});
         final TextView Idtext = view.findViewById(R.id.Id);
         Members.add(Idtext.getText().toString());
         AlertDialog.Builder ad = new AlertDialog.Builder(Memberlist.this);
@@ -127,18 +124,6 @@ public class Memberlist extends AppCompatActivity implements View.OnClickListene
             }
         });
     }
-
-
-    InputFilter RoomNameFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[a-zA-Z0-9ㄱ-ㅣ가-힣]+$")) {
-                return source;
-            } else {
-                return "";
-            }
-        }
-    };
 
     public class ShowMemberList extends AsyncTask<Void, Void, String> {
 

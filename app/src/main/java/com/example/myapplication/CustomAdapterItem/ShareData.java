@@ -1,7 +1,5 @@
 package com.example.myapplication.CustomAdapterItem;
 
-import com.example.myapplication.CustomAdapterItem.MyItem;
-
 public class ShareData {
 
     private String Memeberid;

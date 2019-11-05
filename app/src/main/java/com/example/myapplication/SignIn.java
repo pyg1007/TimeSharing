@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.inputfilter.NumEngFilter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -81,7 +82,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         user_password_confirm = findViewById(R.id.PW_check_Text);
         user_name = findViewById(R.id.nickname_Text);
 
-        user_id.setFilters(new InputFilter[]{idFilter});
+        user_id.setFilters(new InputFilter[]{new NumEngFilter()});
         user_id.setHint("영어와 숫자만 사용가능합니다.");
         user_id.setTextSize(15);
         user_password.setHint("8자리 이상을 입력해주세요.");
@@ -102,20 +103,6 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
-
-    /*
-    영어 숫자만 사용가능하게 제한 걸기
-     */
-    InputFilter idFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[0-9a-zA-Z]+$")) {
-                return source;
-            } else {
-                return "";
-            }
-        }
-    };
 
     public void EnterKey(){
         user_name.setImeOptions(EditorInfo.IME_ACTION_DONE);

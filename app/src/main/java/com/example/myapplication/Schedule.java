@@ -451,7 +451,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         int year = date.getYear();
                         int month = date.getMonth();
                         int day = date.getDay();
-                        int i = 0;
 
                         String dates = null;
                         if(month < 9){
@@ -459,7 +458,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                         }else{
                             dates = String.valueOf(year)+ String.valueOf(month+1) + String.valueOf(day);
                         }
-                        for(i=0; i<myItems.size(); i++){
+                        for(int i=0; i<myItems.size(); i++){
                             if(dates.equals(myItems.get(i).getSavedate())){
                                 showitem.add(new MyItem(myItems.get(i).getIndex(), myItems.get(i).getUserid(), myItems.get(i).getTitle(), myItems.get(i).getContents(), myItems.get(i).getPrevioustime(), myItems.get(i).getAftertime(), myItems.get(i).getSavedate()));
                             }
@@ -475,7 +474,6 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 int year = date.getYear();
                 int month = date.getMonth();
                 int day = date.getDay();
-                int i = 0;
 
                 String dates = null;
                 if(month < 9){
@@ -483,7 +481,7 @@ public class Schedule extends AppCompatActivity implements NavigationView.OnNavi
                 }else{
                     dates = String.valueOf(year)+ String.valueOf(month+1) + String.valueOf(day);
                 }
-                for(i=0; i<myItems.size(); i++){
+                for(int i=0; i<myItems.size(); i++){
                     if(dates.equals(myItems.get(i).getSavedate())){
                         showitem.add(new MyItem(myItems.get(i).getIndex(), myItems.get(i).getUserid(), myItems.get(i).getTitle(), myItems.get(i).getContents(), myItems.get(i).getPrevioustime(), myItems.get(i).getAftertime(), myItems.get(i).getSavedate()));
                     }

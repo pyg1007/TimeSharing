@@ -8,18 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.myapplication.CustomAdapter.CheckboxListAdapter;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.example.myapplication.inputfilter.NonSpecialCharactersFilter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +29,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CheckboxList extends AppCompatActivity implements View.OnClickListener{
@@ -104,7 +100,7 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
                     if (members.size()>1) {
                         final EditText editText = new EditText(CheckboxList.this);
                         editText.setHint("특수문자는 불가능합니다.");
-                        editText.setFilters(new InputFilter[]{RoomNameFilter});
+                        editText.setFilters(new InputFilter[]{new NonSpecialCharactersFilter()});
                         AlertDialog.Builder ad = new AlertDialog.Builder(CheckboxList.this);
                         ad.setTitle("그룹명")
                                 .setMessage("그룹명을 입력해 주세요.")
@@ -145,15 +141,12 @@ public class CheckboxList extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*
-    특수문자만 불가능
-     */
-    InputFilter RoomNameFilter = new InputFilter() {
+    InputFilter korFilter = new InputFilter() {
         @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            if (source.toString().matches("^[a-zA-Z0-9ㄱ-ㅣ가-힣]+$")) {
-                return source;
-            } else {
+        public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
+            if (charSequence.toString().matches("^[ㄱ-ㅣ가-힣]+$")){
+                return charSequence;
+            }else {
                 return "";
             }
         }
