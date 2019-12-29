@@ -25,3 +25,8 @@
 5. 키워드 선택시 빈 시간 안내
 
 6. 일정등록 시 일정 공유 및 그룹회원의 일정에도 등록, 푸시알림
+
+
+
+Android Material CalendarView
+https://github.com/prolificinteractive/material-calendarview
