@@ -11,8 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Splash"
-            android:screenOrientation="portrait">
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,7 +30,7 @@
         <activity android:name=".Schedule" />
         <activity android:name=".SignIn" />
         <activity android:name=".Memberlist" />
-        <activity android:name=".LogIn"></activity>
+        <activity android:name=".LogIn"/>
 
         <service
             android:name=".fcm.MyFirebaseMessagingService"
