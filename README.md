@@ -26,7 +26,9 @@
 
 6. 일정등록 시 일정 공유 및 그룹회원의 일정에도 등록, 푸시알림
 
+// 공개용이기 때문에 GoogleServices.json파일 삭제
+// 현재 무료서버 사용기간 만료
 
-
+# copyright
 Android Material CalendarView
 https://github.com/prolificinteractive/material-calendarview
