@@ -1,34 +1,35 @@
-# Share
+# Introduce
 
-1. 회원가입 및 로그인
+개인 일정을 등록할 수 있고, 그룹을 만들어 개개인의 일정을 프라이빗하게 공유하는 어플리케이션
 
-2. 개인일정 등록 및 편집
+# Project Period
 
-2-1. 회원정보변경
+2019.06.01 ~ 2019.10.31 [4개월]
 
-2-2. 가입되어있는 그룹목록확인
+# Use Language
 
-2-3. 가입되어있는 회원목록확인
+- JAVA
 
-3. 2-3을 이용한 그룹생성
+# Use Skill
 
-3-1. 그룹설명 편집
+- PHP
+- MySQL
+- Firebase Cloud Message(FCM)
+- JAVA
 
-3-2. 그룹초대
+# Team Composition
 
-3-3. 그룹나가기
+- Android 1명
+- BackEnd 1명
 
-3-4. 그룹일정생성
+# Content
 
-4. 3-4를 하면 키워드 생성 및 사용(키워드명, 사용 시간대 설정)
-
-5. 키워드 선택시 빈 시간 안내
-
-6. 일정등록 시 일정 공유 및 그룹회원의 일정에도 등록, 푸시알림
-
-// 공개용이기 때문에 GoogleServices.json파일 삭제
-// 현재 무료서버 사용기간 만료
+![Untitled](https://user-images.githubusercontent.com/8927650/205612233-554bbc77-ad0a-41c1-af31-3fba9c998578.png)
 
 # copyright
-Android Material CalendarView
-https://github.com/prolificinteractive/material-calendarview
+- Android Material CalendarView
+- https://github.com/prolificinteractive/material-calendarview
+
+# Notion
+- 공개용이기 때문에 GoogleServices.json파일 삭제
+- 현재 무료서버 사용기간 만료
